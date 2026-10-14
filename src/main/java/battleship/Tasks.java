@@ -5,6 +5,8 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import java.nio.file.Path;
+import java.io.IOException;
 
 /**
  * The type Tasks.
@@ -32,6 +34,7 @@ public class Tasks {
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
+	private static final String PDF = "pdf";
 	private static final String GUARDAR = "guardar";
 
 	/**
@@ -105,6 +108,18 @@ public class Tasks {
                 case AJUDA:
                     menuHelp();
                     break;
+				case PDF:
+					if (game != null) {
+						try {
+							HistoricoPdf.exportar(game, Path.of("historico.pdf"));
+							System.out.println("PDF criado com sucesso!");
+						} catch (IOException e) {
+							System.out.println("Erro ao criar PDF: " + e.getMessage());
+						}
+					} else {
+						System.out.println("Primeiro tens de criar uma frota!");
+					}
+					break;
 				case GUARDAR:
 					if (game != null) {
 						try {
@@ -148,6 +163,7 @@ public class Tasks {
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
+		System.out.println("- " + PDF + ": Exporta o histórico das jogadas para PDF.");
 		System.out.println("- " + GUARDAR + ": Guardar na Base de Dados.");
 		System.out.println("===============================================================");
 	}
