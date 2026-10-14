@@ -32,6 +32,7 @@ public class Tasks {
 	private static final String MAPA = "mapa";
 	private static final String STATUS = "estado";
 	private static final String SIMULA = "simula";
+	private static final String GUARDAR = "guardar";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -104,6 +105,26 @@ public class Tasks {
                 case AJUDA:
                     menuHelp();
                     break;
+				case GUARDAR:
+					if (game != null) {
+						try {
+							HistoricoSqlite bd = new HistoricoSqlite(
+									java.nio.file.Path.of("partidas.db")
+							);
+
+							long id = bd.guardar(
+									game, "Jogador", "Adversario", null
+							);
+
+							System.out.println("Partida guardada com sucesso! ID: " + id);
+
+						} catch (java.sql.SQLException e) {
+							System.out.println("Erro ao guardar: " + e.getMessage());
+						}
+					} else {
+						System.out.println("Primeiro tens de criar uma partida!");
+					}
+					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -127,6 +148,7 @@ public class Tasks {
 		System.out.println("- " + SIMULA + ": Simula um jogo completo.");
 		System.out.println("- " + TIROS + ": Lista os tiros válidos realizados (* = tiro em navio, o = tiro na água)");
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
+		System.out.println("- " + GUARDAR + ": Guardar na Base de Dados.");
 		System.out.println("===============================================================");
 	}
 	/**
