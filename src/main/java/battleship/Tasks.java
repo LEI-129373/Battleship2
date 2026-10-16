@@ -36,6 +36,7 @@ public class Tasks {
 	private static final String SIMULA = "simula";
 	private static final String PDF = "pdf";
 	private static final String GUARDAR = "guardar";
+	private static final String GRAFICO = "grafico";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -140,6 +141,13 @@ public class Tasks {
 						System.out.println("Primeiro tens de criar uma partida!");
 					}
 					break;
+				case GRAFICO:
+					if (game != null) {
+						TabuleiroGrafico.mostrar(game, true);
+					} else {
+						System.out.println("Primeiro tens de criar uma partida!");
+					}
+					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -165,6 +173,7 @@ public class Tasks {
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("- " + PDF + ": Exporta o histórico das jogadas para PDF.");
 		System.out.println("- " + GUARDAR + ": Guardar na Base de Dados.");
+		System.out.println("- " + GRAFICO + ": Fazer a GUI.");
 		System.out.println("===============================================================");
 	}
 	/**
