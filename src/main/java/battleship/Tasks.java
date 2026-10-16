@@ -37,6 +37,7 @@ public class Tasks {
 	private static final String PDF = "pdf";
 	private static final String GUARDAR = "guardar";
 	private static final String GRAFICO = "grafico";
+	private static final String CLASSIFICACAO = "classificacao";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -49,6 +50,7 @@ public class Tasks {
 
 		System.out.print("> ");
 		Scanner in = new Scanner(System.in);
+		ClassificacaoJogos classificacao = new ClassificacaoJogos();
 		String command = in.next();
 		while (!command.equals(DESISTIR)) {
 
@@ -79,7 +81,9 @@ public class Tasks {
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
-							System.exit(0);
+							classificacao.registarVitoria("Adversario");
+							System.out.println("Partida terminada! Vitória registada.");
+							game = null;
 						}
 					}
 					break;
@@ -98,7 +102,9 @@ public class Tasks {
 
 						if (game.getRemainingShips() == 0) {
 							game.over();
-							System.exit(0);
+							classificacao.registarVitoria("Adversario");
+							System.out.println("Partida terminada! Vitória registada.");
+							game = null;
 						}
 					}
 					break;
@@ -148,6 +154,9 @@ public class Tasks {
 						System.out.println("Primeiro tens de criar uma partida!");
 					}
 					break;
+				case CLASSIFICACAO:
+					System.out.println(classificacao.apresentar());
+					break;
 				default:
 					System.out.println("Que comando é esse??? Repete ...");
 			}
@@ -174,6 +183,7 @@ public class Tasks {
 		System.out.println("- " + PDF + ": Exporta o histórico das jogadas para PDF.");
 		System.out.println("- " + GUARDAR + ": Guardar na Base de Dados.");
 		System.out.println("- " + GRAFICO + ": Fazer a GUI.");
+		System.out.println("- " + CLASSIFICACAO + ": Mostrar a classificação dos jogadores.");
 		System.out.println("===============================================================");
 	}
 	/**
