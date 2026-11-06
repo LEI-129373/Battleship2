@@ -1,6 +1,8 @@
 version: "1.0"
 
+linter: jetbrains/qodana-jvm-community:2026.2
+
 profile:
-  path: .qodana/profiles/qodana-98455.yaml
+  path: .qodana/profiles/profile-98455.yaml
 
 failThreshold: 0

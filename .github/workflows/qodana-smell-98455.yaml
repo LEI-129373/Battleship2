@@ -2,26 +2,23 @@ name: Qodana God Class 98455
 
 on:
   pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
-  qodana:
+  qodana-god-class:
+    name: Qodana God Class 98455
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
-      - name: Qodana Scan
+      - name: Run Qodana with my configuration
         uses: JetBrains/qodana-action@v2026.2
         with:
-          args: --config qodana.yaml
-        env:
-          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+          args: --config qodana-98455.yaml
