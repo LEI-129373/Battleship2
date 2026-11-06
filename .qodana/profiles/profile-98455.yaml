@@ -1,0 +1,6 @@
+name: God Class - 98455
+
+inspections:
+  - inspection: ClassComplexity
+    enabled: true
+    severity: ERROR
