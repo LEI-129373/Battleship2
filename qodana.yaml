@@ -7,7 +7,8 @@ version: "1.0"
 #Specify inspection profile for code analysis
 profile:
   name: qodana.starter
-
+include:
+  - name: NonCommentSourceStatements
 #Enable inspections
 #include:
 #  - name: <SomeEnabledInspectionId>
