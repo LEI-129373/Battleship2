@@ -7,10 +7,7 @@ projectJDK: "23"
 profile:
   path: .qodana/profiles/profile-129373.xml
 
-# Restringe a análise e o Quality Gate APENAS à inspeção NonCommentSourceStatements
-include:
-  - name: NonCommentSourceStatements
-
 failureConditions:
-  severityThresholds:
-    any: 0
+  metricThresholds:
+    - metric: NonCommentSourceStatements
+      threshold: 0

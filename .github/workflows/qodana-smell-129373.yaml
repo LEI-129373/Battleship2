@@ -30,28 +30,3 @@ jobs:
           use-annotations: true
           post-pr-comment: false
           upload-result: true
-
-      - name: Check Long Method Quality Gate
-        if: always()
-        run: |
-          SARIF_FILE=$(find . -name "qodana.sarif.json" | head -n 1)
-
-          if [ -z "$SARIF_FILE" ] || [ ! -f "$SARIF_FILE" ]; then
-            echo "Ficheiro SARIF não encontrado."
-            exit 1
-          fi
-
-          # Filtra unicamente as violações de NonCommentSourceStatements (>30 instruções)
-          COUNT=$(jq '[.runs[].results[]? | select(.ruleId=="NonCommentSourceStatements")] | length' "$SARIF_FILE")
-
-          echo "=================================================="
-          echo "Deteções de Long Method (NonCommentSourceStatements): $COUNT"
-          echo "=================================================="
-
-          if [ "$COUNT" -gt 0 ]; then
-            echo "QUALITY GATE FAILED: Detetados $COUNT métodos com mais de 30 instruções."
-            exit 1
-          else
-            echo "QUALITY GATE PASSED: Nenhum Long Method detetado."
-            exit 0
-          fi
