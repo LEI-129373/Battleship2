@@ -1,13 +1,9 @@
-
-# 129373 - Long Method
-name: Long Method 129373
-default: false
-
-base:
-  name: empty
-
+# 129373 - Nome do Aluno
+baseProfile: "empty"
+name: "long-method-129373"
 inspections:
   - inspection: NonCommentSourceStatements
     enabled: true
+    severity: ERROR
     options:
       m_limit: 30
