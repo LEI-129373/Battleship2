@@ -30,19 +30,3 @@ jobs:
           use-annotations: true
           post-pr-comment: true
           upload-result: true
-          continue-on-error: true
-
-      - name: Verify Long Method Quality Gate (129373)
-        run: |
-          SARIF_FILE="../qodana-report/results/qodana.sarif.json"
-          if [ -f "$SARIF_FILE" ]; then
-            LONG_METHODS=$(jq '[.runs[].results[]? | select(.ruleId=="NonCommentSourceStatements")] | length' $SARIF_FILE)
-            echo "Número de Long Methods detetados: $LONG_METHODS"
-            if [ "$LONG_METHODS" -gt 0 ]; then
-              echo "::error::Quality Gate Falhou! Foram detetados $LONG_METHODS métodos com mais de 30 instruções."
-              exit 1
-            fi
-          else
-            echo "Ficheiro SARIF não encontrado em $SARIF_FILE"
-            exit 1
-          fi
