@@ -27,9 +27,14 @@ public class Tasks {
 	private static final String PDF = "pdf";
 	private static final String GUARDAR = "guardar";
 
+	// Mantém o estado da frota e do jogo entre comandos.
+	private static class MenuState {
+		IFleet myFleet;
+		IGame game;
+	}
+
 	public static void menu() {
-		IFleet myFleet = null;
-		IGame game = null;
+		MenuState state = new MenuState();
 
 		menuHelp();
 
@@ -38,60 +43,7 @@ public class Tasks {
 		String command = in.next();
 
 		while (!command.equals(DESISTIR)) {
-			switch (command) {
-				case GERAFROTA:
-					myFleet = Fleet.createRandom();
-					game = new Game(myFleet);
-					game.printMyBoard(false, true);
-					break;
-
-				case LEFROTA:
-					myFleet = buildFleet(in);
-					game = new Game(myFleet);
-					game.printMyBoard(false, true);
-					break;
-
-				case STATUS:
-					if (myFleet != null) {
-						myFleet.printStatus();
-					}
-					break;
-
-				case MAPA:
-					if (myFleet != null) {
-						game.printMyBoard(false, true);
-					}
-					break;
-
-				case RAJADA:
-					handleEnemyFire(game, myFleet, in);
-					break;
-
-				case SIMULA:
-					simulateGame(game, myFleet);
-					break;
-
-				case TIROS:
-					if (game != null) {
-						game.printMyBoard(true, true);
-					}
-					break;
-
-				case AJUDA:
-					menuHelp();
-					break;
-
-				case PDF:
-					exportPdf(game);
-					break;
-
-				case GUARDAR:
-					saveGame(game);
-					break;
-
-				default:
-					System.out.println("Que comando é esse??? Repete ...");
-			}
+			executeCommand(command, state, in);
 
 			System.out.print("> ");
 			command = in.next();
@@ -100,7 +52,68 @@ public class Tasks {
 		System.out.println(GOODBYE_MESSAGE);
 	}
 
-	private static void handleEnemyFire(IGame game, IFleet myFleet, Scanner in) {
+	private static void executeCommand(
+			String command, MenuState state, Scanner in) {
+
+		switch (command) {
+			case GERAFROTA:
+				state.myFleet = Fleet.createRandom();
+				state.game = new Game(state.myFleet);
+				state.game.printMyBoard(false, true);
+				break;
+
+			case LEFROTA:
+				state.myFleet = buildFleet(in);
+				state.game = new Game(state.myFleet);
+				state.game.printMyBoard(false, true);
+				break;
+
+			case STATUS:
+				if (state.myFleet != null) {
+					state.myFleet.printStatus();
+				}
+				break;
+
+			case MAPA:
+				if (state.myFleet != null) {
+					state.game.printMyBoard(false, true);
+				}
+				break;
+
+			case RAJADA:
+				handleEnemyFire(state.game, state.myFleet, in);
+				break;
+
+			case SIMULA:
+				simulateGame(state.game, state.myFleet);
+				break;
+
+			case TIROS:
+				if (state.game != null) {
+					state.game.printMyBoard(true, true);
+				}
+				break;
+
+			case AJUDA:
+				menuHelp();
+				break;
+
+			case PDF:
+				exportPdf(state.game);
+				break;
+
+			case GUARDAR:
+				saveGame(state.game);
+				break;
+
+			default:
+				System.out.println("Que comando é esse??? Repete ...");
+		}
+	}
+
+	private static void handleEnemyFire(
+			IGame game, IFleet myFleet, Scanner in) {
+
 		if (game != null) {
 			game.readEnemyFire(in);
 			myFleet.printStatus();
