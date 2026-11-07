@@ -1,10 +1,9 @@
-# 98455
-profile:
-  base:
-    name: empty
-  inspections:
-    - inspection: ClassComplexity
-      enabled: true
-      severity: ERROR
-      options:
-        m_limit: 47
+# 98455 - O Vosso Nome
+baseProfile: "empty"
+name: "god-class-98455"
+inspections:
+  - inspection: ClassComplexity
+    enabled: true
+    severity: ERROR
+    options:
+      m_limit: 47
