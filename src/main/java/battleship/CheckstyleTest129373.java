@@ -2,7 +2,7 @@ package battleship;
 
 public class CheckstyleTest129373 {
 
-    public void MetodoComNomeErrado() {
+    public void metodoComNomeErrado() {
         System.out.println("Teste Checkstyle");
     }
 }
