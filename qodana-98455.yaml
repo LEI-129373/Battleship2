@@ -1,0 +1,6 @@
+version: "1.0"
+
+profile:
+  path: .qodana/profiles/qodana-98455.yaml
+
+failThreshold: 0

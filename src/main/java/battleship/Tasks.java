@@ -26,6 +26,8 @@ public class Tasks {
 	private static final String SIMULA = "simula";
 	private static final String PDF = "pdf";
 	private static final String GUARDAR = "guardar";
+	private static final String GRAFICO = "grafico";
+	private static final String CLASSIFICACAO = "classificacao";
 
 	// Mantém o estado da frota e do jogo entre comandos.
 	private static class MenuState {
@@ -40,6 +42,7 @@ public class Tasks {
 
 		System.out.print("> ");
 		Scanner in = new Scanner(System.in);
+		ClassificacaoJogos classificacao = new ClassificacaoJogos();
 		String command = in.next();
 
 		while (!command.equals(DESISTIR)) {
@@ -152,6 +155,8 @@ public class Tasks {
 		System.out.println("- " + DESISTIR + ": Encerra o jogo.");
 		System.out.println("- " + PDF + ": Exporta o histórico das jogadas para PDF.");
 		System.out.println("- " + GUARDAR + ": Guardar na Base de Dados.");
+		System.out.println("- " + GRAFICO + ": Fazer a GUI.");
+		System.out.println("- " + CLASSIFICACAO + ": Mostrar a classificação dos jogadores.");
 		System.out.println("===============================================================");
 	}
 
