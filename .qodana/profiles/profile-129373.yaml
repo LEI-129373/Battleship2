@@ -1,9 +1,13 @@
-<component name="InspectionProjectProfileManager">
-<profile version="1.0">
-<option name="myName" value="Long Method 129373" />
-<option name="myLocal" value="true" />
-<inspection_tool class="NonCommentSourceStatements" enabled="true" level="WARNING" enabled_by_default="true">
-<option name="m_limit" value="30" />
-</inspection_tool>
-</profile>
-</component>
+
+# 129373 - Long Method
+name: Long Method 129373
+default: false
+
+base:
+  name: empty
+
+inspections:
+  - inspection: NonCommentSourceStatements
+    enabled: true
+    options:
+      m_limit: 30
