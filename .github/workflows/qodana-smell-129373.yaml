@@ -27,6 +27,7 @@ jobs:
         uses: JetBrains/qodana-action@v2026.2
         with:
           args: --config qodana-129373.yaml
+          results-dir: ./qodana-results
           use-annotations: true
           post-pr-comment: false
           upload-result: true

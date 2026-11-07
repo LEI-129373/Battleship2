@@ -4,10 +4,11 @@ version: "1.0"
 linter: jetbrains/qodana-jvm-community:2026.2
 projectJDK: "23"
 
-profile:
-  path: .qodana/profiles/profile-129373.xml
+include:
+  - name: NonCommentSourceStatements
+    options:
+      m_limit: 30
 
 failureConditions:
-  metricThresholds:
-    - metric: NonCommentSourceStatements
-      threshold: 0
+  severityThresholds:
+    any: 0
