@@ -1,6 +1,10 @@
-name: God Class - 98455
-
-inspections:
-  - inspection: ClassComplexity
-    enabled: true
-    severity: ERROR
+# 98455
+profile:
+  base:
+    name: empty
+  inspections:
+    - inspection: ClassComplexity
+      enabled: true
+      severity: ERROR
+      options:
+        m_limit: 47
