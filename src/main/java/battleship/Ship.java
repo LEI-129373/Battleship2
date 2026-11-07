@@ -4,10 +4,9 @@
 package battleship;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 /**
  * The type Ship.
@@ -49,19 +48,29 @@ public abstract class Ship implements IShip
 		assert bearing != null;
 		assert pos != null;
 
-		BiFunction<Compass, IPosition, Ship> constructor = SHIP_CONSTRUCTORS.get(shipKind);
-		return constructor == null ? null : constructor.apply(bearing, pos);
+        Ship s;
+        switch (shipKind)
+        {
+        case BARCA:
+            s = new Barge(bearing, pos);
+			break;
+        case CARAVELA:
+            s = new Caravel(bearing, pos);
+			break;
+        case NAU:
+            s = new Carrack(bearing, pos);
+			break;
+        case FRAGATA:
+            s = new Frigate(bearing, pos);
+			break;
+        case GALEAO:
+            s = new Galleon(bearing, pos);
+			break;
+        default:
+            s = null;
+        }
+        return s;
     }
-
-	/**
-	 * Associa cada tipo de navio ao respetivo construtor (substitui o switch).
-	 */
-	private static final Map<String, BiFunction<Compass, IPosition, Ship>> SHIP_CONSTRUCTORS = Map.of(
-			BARCA, Barge::new,
-			CARAVELA, Caravel::new,
-			NAU, Carrack::new,
-			FRAGATA, Frigate::new,
-			GALEAO, Galleon::new);
 
     //---------------------------------------------------------
 
@@ -214,7 +223,10 @@ public abstract class Ship implements IShip
     @Override
     public boolean stillFloating()
     {
-		return getPositions().stream().anyMatch(position -> !position.isHit());
+	for (int i = 0; i < getSize(); i++)
+	    if (!getPositions().get(i).isHit())
+			return true;
+	return false;
     }
 
 	/**
@@ -230,7 +242,11 @@ public abstract class Ship implements IShip
     @Override
     public int getTopMostPos()
     {
-		return getPositions().stream().mapToInt(IPosition::getRow).min().orElseThrow();
+	int top = getPositions().get(0).getRow();
+	for (int i = 1; i < getSize(); i++)
+	    if (getPositions().get(i).getRow() < top)
+		top = getPositions().get(i).getRow();
+	return top;
     }
 
 	/**
@@ -246,7 +262,11 @@ public abstract class Ship implements IShip
     @Override
     public int getBottomMostPos()
     {
-		return getPositions().stream().mapToInt(IPosition::getRow).max().orElseThrow();
+	int bottom = getPositions().get(0).getRow();
+	for (int i = 1; i < getSize(); i++)
+	    if (getPositions().get(i).getRow() > bottom)
+			bottom = getPositions().get(i).getRow();
+	return bottom;
     }
 
 	/**
@@ -262,7 +282,11 @@ public abstract class Ship implements IShip
     @Override
     public int getLeftMostPos()
     {
-		return getPositions().stream().mapToInt(IPosition::getColumn).min().orElseThrow();
+	int left = getPositions().get(0).getColumn();
+	for (int i = 1; i < getSize(); i++)
+	    if (getPositions().get(i).getColumn() < left)
+			left = getPositions().get(i).getColumn();
+	return left;
     }
 
 	/**
@@ -278,7 +302,11 @@ public abstract class Ship implements IShip
     @Override
     public int getRightMostPos()
     {
-		return getPositions().stream().mapToInt(IPosition::getColumn).max().orElseThrow();
+	int right = getPositions().get(0).getColumn();
+	for (int i = 1; i < getSize(); i++)
+	    if (getPositions().get(i).getColumn() > right)
+		right = getPositions().get(i).getColumn();
+	return right;
     }
 
 	/**
@@ -297,7 +325,10 @@ public abstract class Ship implements IShip
     {
 		assert pos != null;
 
-		return getPositions().contains(pos);
+		for (int i = 0; i < getSize(); i++)
+			if (getPositions().get(i).equals(pos))
+				return true;
+		return false;
     }
 
 	/**
@@ -316,7 +347,12 @@ public abstract class Ship implements IShip
     {
 		assert other != null;
 
-		return other.getPositions().stream().anyMatch(this::tooCloseTo);
+		Iterator<IPosition> otherPos = other.getPositions().iterator();
+		while (otherPos.hasNext())
+			if (tooCloseTo(otherPos.next()))
+				return true;
+
+		return false;
     }
 
 	/**
@@ -335,11 +371,16 @@ public abstract class Ship implements IShip
     {
 		assert pos != null;
 
-		return getPositions().stream().anyMatch(position -> position.isAdjacentTo(pos));
+		for (int i = 0; i < this.getSize(); i++)
+			if (getPositions().get(i).isAdjacentTo(pos))
+				return true;
+		return false;
     }
 
 	public boolean isInsideBoard()
 	{
+		assert this != null;
+
 		return (getLeftMostPos() >= 0 && getRightMostPos() <= Game.BOARD_SIZE - 1 && getTopMostPos() >= 0
 				&& getBottomMostPos() <= Game.BOARD_SIZE - 1);
 	}
