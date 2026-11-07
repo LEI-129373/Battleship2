@@ -42,7 +42,7 @@ jobs:
             exit 1
           fi
 
-          # Conta EXCLUSIVAMENTE ocorrências do ID NonCommentSourceStatements (>30 instruções)
+          # Conta EXCLUSIVAMENTE os Long Methods (>30 instruções)
           COUNT=$(jq '[.runs[].results[]? | select(.ruleId=="NonCommentSourceStatements")] | length' "$SARIF_FILE")
 
           echo "=================================================="
