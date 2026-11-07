@@ -1,10 +1,12 @@
 
 # 129373 - Long Method
-profile:
-  base:
-    name: empty
-  inspections:
-    - inspection: NonCommentSourceStatements
-      enabled: true
-      options:
-        m_limit: 30
+name: Long Method 129373
+
+base:
+  name: empty
+
+inspections:
+  - inspection: NonCommentSourceStatements
+    enabled: true
+    options:
+      m_limit: 30
