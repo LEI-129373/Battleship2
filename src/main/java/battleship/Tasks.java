@@ -73,41 +73,6 @@ public class Tasks {
 					state.myFleet.printStatus();
 				}
 				break;
-
-			case MAPA:
-				if (state.myFleet != null) {
-					state.game.printMyBoard(false, true);
-				}
-				break;
-
-			case RAJADA:
-				handleEnemyFire(state.game, state.myFleet, in);
-				break;
-
-			case SIMULA:
-				simulateGame(state.game, state.myFleet);
-				break;
-
-			case TIROS:
-				if (state.game != null) {
-					state.game.printMyBoard(true, true);
-				}
-				break;
-
-			case AJUDA:
-				menuHelp();
-				break;
-
-			case PDF:
-				exportPdf(state.game);
-				break;
-
-			case GUARDAR:
-				saveGame(state.game);
-				break;
-
-			default:
-				System.out.println("Que comando é esse??? Repete ...");
 		}
 	}
 
