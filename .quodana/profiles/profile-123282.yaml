@@ -1,0 +1,7 @@
+# 12345 Nome do Aluno
+name: "EmptyClass Smell Profile"
+base:
+  name: empty
+inspections:
+  - inspection: EmptyClass
+    enabled: true
