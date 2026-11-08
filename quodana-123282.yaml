@@ -1,4 +1,4 @@
-# 12345 Nome do Aluno
+# 123282 - Cíntia Brandão
 version: "1.0"
 linter: jetbrains/qodana-jvm-community:2026.2
 projectJDK: "17" # Altera para a versão do JDK do teu BattleShip2 (ex: 17, 21)
