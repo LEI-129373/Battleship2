@@ -1,64 +1,219 @@
-# Qodana — God Class (98455 - Carmen Gonzalez)
+# Ficha Laboratorial 3 — Tarefa 2A: Qodana
 
-Quality gate no GitHub Actions para detetar instâncias do cheiro no código **God Class** no projeto BattleShip2, usando o Qodana Community for JVM.
+**Aluno:** 98455 — Carmen Gonzalez  
+**Projeto:** Battleship2  
+**Code Smell:** God Class  
+**Ferramenta:** JetBrains Qodana for JVM Community  
+**Ano letivo:** 2026/2027
 
-## Ficheiros entregues
+## 1. Identificação do Code Smell
 
-| Ficheiro | Função |
-|---|---|
-| `.github/workflows/qodana-smell-98455.yaml` | Workflow do GitHub Actions (corre em `push`, `pull_request` e `workflow_dispatch`) |
-| `qodana-98455.yaml` | Configuração do linter: `qodana-jvm-community:2026.2`, `projectJDK: "21"`, perfil e quality gate (`failureConditions.severityThresholds.any: 0`) |
-| `.qodana/profiles/profile-98455.yaml` | Perfil de inspeção: parte do perfil `empty` e ativa apenas `ClassComplexity` com `m_limit: 47` |
+A **God Class**, descrita por Martin Fowler (próxima de *Large Class*), ocorre quando uma classe concentra demasiada lógica e responsabilidades, centralizando o comportamento do sistema e acedendo a dados de outras classes. Isto torna a classe difícil de compreender, manter, testar e reutilizar.
 
-## Tabela de mapeamento (passo 4)
+A principal técnica de refatorização utilizada foi **Extract Class**, que consiste em mover uma responsabilidade da classe para uma nova classe, preservando o comportamento original do programa. Foram também simplificados métodos com ciclos e estruturas condicionais desnecessárias.
+
+## 2. Mapeamento entre o Code Smell e o Qodana
 
 | Cheiro (Fowler) | Inspeção no IDE | ID da inspeção | Métrica / limiar | Limitações |
 |---|---|---|---|---|
-| God Class | Overly complex class | `ClassComplexity` | WMC (soma da complexidade ciclomática dos métodos da classe); opção `m_limit` = 47 (valor "muito alto" para WMC em Java). Por omissão, o IDE usa 80 | A estratégia do livro combina três condições com AND: **ATFD > FEW** (acesso a dados de outras classes), **WMC ≥ VERY HIGH** e **TCC < 1/3** (baixa coesão). O Qodana só mede o WMC, não tem inspeções para ATFD nem TCC e não permite combinar inspeções com AND. O limiar é absoluto e não relativo ao sistema |
+| God Class | Overly complex class | `ClassComplexity` | WMC — soma da complexidade ciclomática dos métodos da classe; `m_limit: 47` (por omissão: 80) | O livro exige ATFD > FEW **e** WMC ≥ VERY HIGH **e** TCC < 1/3; o Qodana só mede o WMC, não tem ATFD nem TCC, não permite combinar condições com AND e usa um limiar absoluto |
 
-## Resultados
+| Propriedade | Valor |
+|---|---|
+| Code Smell | God Class |
+| Inspeção IntelliJ/Qodana | Overly complex class |
+| ID da inspeção | `ClassComplexity` |
+| Métrica | WMC (Weighted Methods per Class), calculada como a soma da complexidade ciclomática dos métodos |
+| Limite configurado | 47 |
+| Opção | `m_limit: 47` |
+| Linter | `jetbrains/qodana-jvm-community:2026.2` |
 
-### Análise do projeto completo (passo 8)
+O valor de 47 corresponde ao limiar "muito alto" de WMC para Java em *Object-Oriented Metrics in Practice*, que é usado na estratégia de deteção da God Class. O valor por omissão da inspeção no IDE é 80.
 
-Com `m_limit: 47`, o quality gate falhou e identificou duas classes:
+### Limitações da inspeção
 
-| Classe | Localização | WMC |
+A estratégia de deteção do livro combina três condições: a classe acede diretamente a dados de outras classes (ATFD > FEW), tem complexidade muito alta (WMC ≥ VERY HIGH) e tem baixa coesão (TCC < 1/3).
+
+O Qodana for JVM só tem uma inspeção equivalente à segunda condição. Não existem inspeções para ATFD nem para TCC, e não é possível combinar várias inspeções com uma condição AND. Além disso, o limite é absoluto e não relativo à distribuição das métricas no sistema. Por isso, a configuração usada é uma aproximação da estratégia do livro.
+
+## 3. Configuração do Qodana
+
+Foram criados ficheiros individuais identificados com o número de aluno 98455.
+
+| Ficheiro | Finalidade |
+|---|---|
+| `../qodana-98455.yaml` | Configuração principal do Qodana |
+| `../.qodana/profiles/profile-98455.yaml` | Perfil da inspeção God Class |
+| `../.github/workflows/qodana-smell-98455.yaml` | Workflow GitHub Actions |
+| `README-98455.md` | Documentação e evidências |
+
+### 3.1. Configuração principal
+
+Ficheiro `../qodana-98455.yaml`:
+
+```yaml
+# 98455 - Carmen Gonzalez
+version: "1.0"
+linter: jetbrains/qodana-jvm-community:2026.2
+projectJDK: "21"
+profile:
+  path: .qodana/profiles/profile-98455.yaml
+failureConditions:
+  severityThresholds:
+    any: 0
+```
+
+Esta configuração usa o Qodana JVM Community 2026.2, define o JDK 21 (a versão do `pom.xml`) e aponta para o perfil personalizado de inspeções.
+
+A opção `severityThresholds.any: 0` define tolerância zero: basta um problema para o job falhar.
+
+### 3.2. Perfil da inspeção
+
+Ficheiro `../.qodana/profiles/profile-98455.yaml`:
+
+```yaml
+# 98455 - Carmen Gonzalez
+baseProfile: "empty"
+name: "god-class-98455"
+inspections:
+  - inspection: ClassComplexity
+    enabled: true
+    severity: ERROR
+    options:
+      m_limit: 47
+```
+
+O perfil parte de um perfil vazio (`empty`) e ativa apenas a inspeção `ClassComplexity`, com um limite de 47.
+
+**Nota:** o formato de perfil sugerido no enunciado (`profile:` → `base: name: empty`) foi ignorado pelo Qodana. Com esse formato, a ferramenta usou o perfil *Project Default* e reportou mais de 190 problemas de todo o tipo (Javadoc, imports não usados, etc.). O formato que funcionou foi o dos perfis oficiais da JetBrains (repositório `JetBrains/qodana-profiles`), com `baseProfile`, `name` e `inspections` no nível de topo do ficheiro.
+
+### 3.3. Workflow GitHub Actions
+
+Ficheiro `../.github/workflows/qodana-smell-98455.yaml`:
+
+```yaml
+# 98455 - Carmen Gonzalez - Qodana God Class
+name: Qodana God Class 98455
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  qodana:
+    name: Qodana God Class 98455
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Run Qodana
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          args: --config qodana-98455.yaml
+          pr-mode: false
+          use-annotations: true
+          post-pr-comment: true
+```
+
+O workflow corre automaticamente em eventos `push` e `pull_request` e também pode ser iniciado manualmente através de `workflow_dispatch`. A opção `pr-mode: false` faz com que o projeto seja sempre analisado na íntegra, e não apenas os ficheiros alterados.
+
+## 4. Quality Gate
+
+O objetivo do quality gate é detetar automaticamente classes com características de God Class.
+
+Para a inspeção escolhida, pretende-se ter **zero classes com WMC acima de 47**.
+
+Quando a análise encontra pelo menos uma classe acima do limite, o GitHub Actions apresenta uma falha (*"The number of problems exceeds the failThreshold"*). Quando não encontra nenhuma, o workflow termina com sucesso.
+
+## 5. Identificação e refatorização dos problemas
+
+A análise do projeto completo identificou duas classes acima do limite:
+
+| Ficheiro | Classe | WMC inicial |
+|---|---|---:|
+| `../src/main/java/battleship/Game.java` | `Game` | 67 |
+| `../src/main/java/battleship/Ship.java` | `Ship` | 51 |
+
+### Refatorizações realizadas
+
+**Game.java:** foi aplicada a refatorização **Extract Class**. A lógica de desenho do tabuleiro (`printBoard`, `printShips`, `printBoardShots`, `printBoardFrame` e os marcadores) passou para a nova classe `BoardPrinter`, e `Game.printBoard` passou a delegar nessa classe. O método `randomEnemyFire` foi simplificado, substituindo dois ciclos duplicados por `Collections.shuffle`, e `repeatedShot` passou a usar `anyMatch`.
+
+**Ship.java:** o `switch` de `buildShip` foi substituído por um mapa que associa cada tipo de navio ao respetivo construtor. Os ciclos de `getTopMostPos`, `getBottomMostPos`, `getLeftMostPos`, `getRightMostPos`, `stillFloating`, `occupies` e `tooCloseTo` foram substituídos por streams.
+
+| Classe | WMC antes | WMC depois (aprox.) |
+|---|---:|---:|
+| `Game` | 67 | ~39 |
+| `Ship` | 51 | ~31 |
+| `BoardPrinter` (nova) | — | ~24 |
+
+Estas alterações reduziram a complexidade das duas classes para valores abaixo do limite, mantendo o comportamento do jogo.
+
+## 6. Evidências das execuções
+
+### 6.1. Execução vermelha — Failure
+
+No ramo `God-Class-98455`, as versões originais de `Game` e `Ship` foram repostas deliberadamente para provocar o cheiro. O quality gate falhou e apontou as duas classes (`Game` com WMC 67 e `Ship` com WMC 51).
+
+**[Execução vermelha — GitHub Actions](https://github.com/LEI-129373/Battleship2/actions/runs/42414133460)**
+
+### 6.2. Execução verde — Success
+
+Depois de repor as classes refatorizadas no mesmo ramo, o workflow terminou com sucesso.
+
+**[Execução verde — GitHub Actions](https://github.com/LEI-129373/Battleship2/actions/runs/42414282346)**
+
+### 6.3. Comparação
+
+| Estado | Resultado | Evidência |
 |---|---|---|
-| `Game` | `src/main/java/battleship/Game.java#L9` | 67 |
-| `Ship` | `src/main/java/battleship/Ship.java#L14` | 51 |
+| Com o cheiro provocado | Failure | [Execução vermelha](https://github.com/LEI-129373/Battleship2/actions/runs/42414133460) |
+| Após a correção | Success | [Execução verde](https://github.com/LEI-129373/Battleship2/actions/runs/42414282346) |
 
-Execução: https://github.com/LEI-129373/Battleship2/actions/runs/42404969831
+## 7. Proteção da branch main
 
-**Experiência com os limiares.** [Preencher com o resultado de, por exemplo, `m_limit: 31` e `m_limit: 70`, e de `any: 2` no `failureConditions`.]
+Foi configurada uma regra de proteção para a branch `main` que exige que os status checks obrigatórios passem antes de permitir o merge de um Pull Request.
 
-### Refabricação
+O check associado a esta tarefa é **Qodana God Class 98455**.
 
-Para que o projeto passasse no gate, as duas classes foram refabricadas sem alterar o comportamento:
+### 7.1. Demonstração com um Pull Request
 
-- **`Game` (67 → ~39):** *Extract Class*. A lógica de desenhar o tabuleiro passou para a nova classe `BoardPrinter` (~24), e `Game.printBoard` passou a delegar nela. O método `randomEnemyFire` foi simplificado (`Collections.shuffle` em vez de dois ciclos duplicados) e `repeatedShot` passou a usar `anyMatch`.
-- **`Ship` (51 → ~31):** o `switch` de `buildShip` foi substituído por um mapa de construtores, e os ciclos de `getTopMostPos`, `getBottomMostPos`, `getLeftMostPos`, `getRightMostPos`, `stillFloating`, `occupies` e `tooCloseTo` foram substituídos por streams.
+Para testar a proteção, foi criada a branch `God-Class-98455`, onde o cheiro foi introduzido deliberadamente, e foi aberto o seguinte Pull Request para o `main`:
 
-### Provocar o cheiro (passo 9)
+**[Pull Request #15 — God Class 98455](https://github.com/LEI-129373/Battleship2/pull/15)**
 
-No ramo `God-Class-98455`, as versões originais de `Game` e `Ship` foram repostas deliberadamente e foi aberto um pull request para o `main`.
+O Qodana identificou a violação da inspeção `ClassComplexity` e o quality gate ficou no estado **Failure**. A regra de proteção da branch `main` impediu o merge enquanto o check obrigatório estava vermelho.
 
-- Pull request: https://github.com/LEI-129373/Battleship2/pull/15
-- Execução que **falha** (gate aponta `Game` = 67 e `Ship` = 51): https://github.com/LEI-129373/Battleship2/actions/runs/42404969831
-- Execução que **passa**, depois de repor as classes refabricadas: https://github.com/LEI-129373/Battleship2/actions/runs/42409932535
+### 7.2. Correção da violação
 
-### Bloqueio do merge (passo 10)
+Depois da demonstração do erro, as classes refatorizadas foram repostas na branch, e uma nova execução do workflow confirmou que o quality gate voltou a passar.
 
-O ramo `main` tem uma regra de proteção que exige o check **Qodana God Class 98455** antes do merge. No PR #15, com o gate vermelho, o botão *Merge pull request* ficou bloqueado. [Inserir print]
+Desta forma, foi demonstrado o processo de deteção, correção e reavaliação de uma violação do Code Smell God Class.
 
-Notas sobre outros checks que aparecem no PR e não pertencem a este quality gate:
+O Pull Request de teste não precisa de ser integrado na branch `main`, porque o seu objetivo é demonstrar o funcionamento do quality gate e da regra de proteção.
 
-- **Java CI with Maven / build** falha em todos os PRs para o `main` porque o workflow `maven.yml` usa o JDK 17 e o `pom.xml` exige Java 21.
-- **Qodana Long Method 129373** está marcado como obrigatório, mas o respetivo workflow ainda não existe no `main`, por isso fica em estado *Expected* e também impede o merge.
+## 8. Reflexão sobre os resultados
 
-## Reflexão
+O Qodana detetou duas classes acima do limiar: `Game` (WMC 67) e `Ship` (WMC 51). A primeira é um verdadeiro positivo, porque acumulava a lógica do jogo e o desenho do tabuleiro. A segunda aproxima-se de um falso positivo, já que a complexidade vinha de muitos métodos simples e não de baixa coesão ou de acesso a dados de outras classes. Pelo mesmo motivo podem existir falsos negativos, como classes com WMC moderado mas muito acopladas e pouco coesas, que esta inspeção não apanha. O resultado é muito sensível ao limiar: com o valor por omissão do IDE (80), nenhuma classe seria apontada, e com 47 são apontadas as duas. Comparada com a estratégia de *Object-Oriented Metrics in Practice*, esta configuração é apenas uma aproximação, porque usa uma única métrica com um limite absoluto em vez de combinar três métricas com limiares relativos.
 
-O Qodana detetou duas classes com complexidade acima do limiar: `Game` (WMC 67) e `Ship` (WMC 51). `Game` é um verdadeiro positivo, porque acumulava a lógica do jogo e a apresentação do tabuleiro, e a extração de `BoardPrinter` resolveu-o. `Ship` aproxima-se de um falso positivo: a complexidade vinha de muitos métodos simples com ciclos e de um `switch`, e não de uma classe pouco coesa a manipular dados de outras, o que o critério completo do livro (ATFD e TCC) provavelmente não sinalizaria. Pelo mesmo motivo podem existir falsos negativos: classes com WMC moderado mas com muito acesso a dados alheios e baixa coesão não são detetadas. O resultado é muito sensível ao limiar, porque com o valor por omissão do IDE (80) nenhuma classe seria apontada. Por isso, a deteção com uma única métrica absoluta é apenas uma aproximação da estratégia de deteção do livro.
+## 9. Conclusão
 
-## Nota sobre a configuração
+Esta tarefa permitiu aplicar o Qodana à identificação automática do Code Smell **God Class** no projeto Battleship2.
 
-O formato de perfil YAML sugerido no enunciado (`profile:` → `base: name: empty`) foi ignorado pelo Qodana, que caiu no perfil *Project Default* e reportou mais de 190 problemas de todo o tipo. O formato que funcionou foi o dos perfis oficiais da JetBrains (repositório `JetBrains/qodana-profiles`), com `baseProfile: "empty"`, `name` e `inspections` no nível de topo do ficheiro.
+Foi estabelecida a correspondência entre o Code Smell de Martin Fowler e a inspeção `ClassComplexity`, com um limite de 47 baseado nos valores do livro.
+
+A refatorização **Extract Class** e a simplificação de métodos reduziram a complexidade das classes identificadas para valores abaixo do limite.
+
+A integração com o GitHub Actions permitiu demonstrar o funcionamento do quality gate através de uma execução com falha e de outra com sucesso.
+
+Por fim, a proteção da branch `main` e o Pull Request #15 permitiram testar o bloqueio de alterações que não satisfazem o quality gate.
