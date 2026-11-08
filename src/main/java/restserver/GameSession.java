@@ -1,7 +1,6 @@
 package restserver;
 
 import battleship.Fleet;
-import battleship.Game;
 import battleship.IGame;
 
 /**
