@@ -68,7 +68,6 @@ public class Game implements IGame
 	//------------------------------------------------------------------
 	public static final int BOARD_SIZE = 10;
 	public static final int NUMBER_SHOTS = 3;
-	public static final int maxShips = 11;
 
 
 	//------------------------------------------------------------------
