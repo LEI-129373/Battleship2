@@ -1,7 +1,7 @@
 # 123282 - Cíntia Brandão
-name: "EmptyClass Smell Profile"
-base:
-  name: empty
+baseProfile: "empty"
+name: "empty-class-123282"
 inspections:
   - inspection: EmptyClass
     enabled: true
+    severity: ERROR
