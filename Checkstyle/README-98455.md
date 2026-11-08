@@ -22,7 +22,7 @@ public static final int maxShips = 11;
 O Checkstyle detetou a violação na linha 71, porque o nome usava minúsculas em vez de maiúsculas com `_`.
 
 - **Execução vermelha:** https://github.com/LEI-129373/Battleship2/actions/runs/42440175568
-- **Execução verde após correção:** https://github.com/LEI-129373/Battleship2/actions/runs/42440263348
+- **Execução verde após correção:** https://github.com/LEI-129373/Battleship2/actions/runs/42441913395
 - **Pull Request:** https://github.com/LEI-129373/Battleship2/pull/19
 
 A correção consistiu em alterar `maxShips` para `MAX_SHIPS`.
