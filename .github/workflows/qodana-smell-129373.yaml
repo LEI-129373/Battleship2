@@ -1,0 +1,33 @@
+# 129373 - Aloísio Ferreira
+name: Qodana Long Method 129373
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  qodana:
+    name: Qodana Long Method 129373
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Run Qodana
+        uses: JetBrains/qodana-action@v2026.2
+        with:
+          args: --config qodana-129373.yaml
+          pr-mode: false
+          use-annotations: true
+          post-pr-comment: true
+          upload-result: true

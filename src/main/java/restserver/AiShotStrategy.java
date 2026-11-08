@@ -28,6 +28,19 @@ public class AiShotStrategy {
 	 * @param game  the current game (used to read past moves and fleet state)
 	 * @return      a list of exactly Game.NUMBER_SHOTS positions
 	 */
+
+	private void fillRemainingShots(Set<IPosition> alreadyShot, List<IPosition> chosen) {
+		if (chosen.size() < Game.NUMBER_SHOTS) {
+			for (int r = 0; r < Game.BOARD_SIZE && chosen.size() < Game.NUMBER_SHOTS; r++) {
+				for (int c = 0; c < Game.BOARD_SIZE && chosen.size() < Game.NUMBER_SHOTS; c++) {
+					IPosition p = new Position(r, c);
+					if (!alreadyShot.contains(p) && !chosen.contains(p)) {
+						chosen.add(p);
+					}
+				}
+			}
+		}
+	}
 	public List<IPosition> computeShots(IGame game) {
 
 		// Build set of all positions already shot by the AI
@@ -42,17 +55,7 @@ public class AiShotStrategy {
 		List<IPosition> chosen = new ArrayList<>();
 
 		// ── Phase 2 TARGET: prioritise neighbours of existing hits ──────────
-		if (!hitTargets.isEmpty()) {
-			for (IPosition hit : hitTargets) {
-				if (chosen.size() >= Game.NUMBER_SHOTS) break;
-				for (IPosition neighbour : hit.adjacentPositions()) {
-					if (chosen.size() >= Game.NUMBER_SHOTS) break;
-					if (!alreadyShot.contains(neighbour) && !chosen.contains(neighbour)) {
-						chosen.add(neighbour);
-					}
-				}
-			}
-		}
+		fillRemainingShots(alreadyShot, chosen);
 
 		// ── Phase 1 HUNT: fill remaining slots from checkerboard pattern ────
 		if (chosen.size() < Game.NUMBER_SHOTS) {

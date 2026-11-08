@@ -1,0 +1,30 @@
+# 129373 - Checkstyle MethodName
+name: Checkstyle MethodName 129373
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+
+jobs:
+  checkstyle:
+    name: Checkstyle MethodName 129373
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Checkstyle
+        uses: dbelyaev/action-checkstyle@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_config: checkstyle-129373.xml
+          reporter: github-check
+          filter_mode: nofilter
+          level: error
+          fail_level: error
