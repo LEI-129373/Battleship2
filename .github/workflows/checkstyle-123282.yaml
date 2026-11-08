@@ -1,0 +1,31 @@
+# 123282 - Cíntia Brandão - Checkstyle: nomes de classes e interfaces
+name: Checkstyle TypeName 123282
+
+on:
+  pull_request:
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  checkstyle:
+    name: Checkstyle TypeName 123282
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Checkstyle
+        uses: dbelyaev/action-checkstyle@v4.5.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          checkstyle_config: checkstyle-123282.xml
+          reporter: github-check
+          filter_mode: nofilter
+          level: error
+          fail_level: error

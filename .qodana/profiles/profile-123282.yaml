@@ -1,0 +1,7 @@
+# 123282 - Cíntia Brandão
+baseProfile: "empty"
+name: "empty-class-123282"
+inspections:
+  - inspection: EmptyClass
+    enabled: true
+    severity: ERROR
