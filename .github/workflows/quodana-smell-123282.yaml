@@ -3,7 +3,6 @@ name: Qodana smell gate 123282
 
 on:
   push:
-    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -14,6 +13,7 @@ permissions:
 
 jobs:
   qodana:
+    name: Qodana smell gate 123282
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
