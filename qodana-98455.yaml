@@ -1,6 +1,9 @@
+# 98455 - Carmen Gonzalez
 version: "1.0"
-
+linter: jetbrains/qodana-jvm-community:2026.2
+projectJDK: "21"
 profile:
-  path: .qodana/profiles/qodana-98455.yaml
-
-failThreshold: 0
+  path: .qodana/profiles/profile-98455.yaml
+failureConditions:
+  severityThresholds:
+    any: 0

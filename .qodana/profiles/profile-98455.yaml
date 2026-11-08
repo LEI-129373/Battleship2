@@ -1,6 +1,9 @@
-name: God Class - 98455
-
+# 98455 - Carmen Gonzalez
+baseProfile: "empty"
+name: "god-class-98455"
 inspections:
   - inspection: ClassComplexity
     enabled: true
     severity: ERROR
+    options:
+      m_limit: 47
