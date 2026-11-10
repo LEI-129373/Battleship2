@@ -33,7 +33,7 @@ O projeto usa o workflow **Java CI with Maven**, definido em [`.github/workflows
 **O que faz**
 1. Cria uma máquina virtual `ubuntu-latest`;
 2. Faz checkout do código do repositório;
-3. Instala o JDK 17 (distribuição Temurin), com cache das dependências Maven;
+3. Instala o JDK 21 (distribuição Temurin), com cache das dependências Maven;
 4. Executa `mvn -B package`, que compila o projeto e corre todos os testes em `src/test/java` antes de gerar o `.jar`.
 
 **Resultado**
