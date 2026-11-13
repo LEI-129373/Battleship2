@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assumptions.assumeTrue;
  *  2. menu/SIMULA: o ramo falso de "if (game.getRemainingShips() == 0)" a seguir ao while, porque o ciclo
  *     so termina quando o valor deixa de ser > 0 e Game.getRemainingShips() nunca e negativo.
  */
-class TasksCoberturaTest {
+class TasksTest {
 
 	private static final String PDF = "historico.pdf";
 	private static final String BD = "partidas.db";
