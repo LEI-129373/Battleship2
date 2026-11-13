@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Nota: requer ambiente grafico (nao headless), por exemplo com xvfb em CI.
  */
 @DisplayName("Testes da classe TabuleiroGrafico")
-class TabuleiroGraficoCoberturaTest {
+class TabuleiroGraficoTest {
 
     @AfterEach
     void fecharJanelas() {
