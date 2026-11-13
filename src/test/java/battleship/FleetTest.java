@@ -11,6 +11,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiFunction;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.assumeTrue;
@@ -303,5 +307,61 @@ class FleetTest {
 		boolean ativas = false;
 		assert ativas = true;
 		return ativas;
+	}
+
+	@Test
+	@DisplayName("createRandom: repete a tentativa quando Ship.buildShip devolve null (ramo 'ship == null')")
+	@SuppressWarnings("unchecked")
+	void createRandomQuandoBuildShipDevolveNull() {
+		Object[] tabela = obterTabelaInternaDoMapa();
+		assumeTrue(tabela != null, "nao foi possivel aceder ao array interno de Ship.SHIP_CONSTRUCTORS nesta JVM");
+
+		int indice = -1;
+		for (int i = 0; i < tabela.length; i += 2) {
+			if ("galeao".equals(tabela[i])) {
+				indice = i;
+				break;
+			}
+		}
+		assumeTrue(indice >= 0, "entrada 'galeao' nao encontrada no mapa");
+
+		BiFunction<Compass, IPosition, Ship> original = (BiFunction<Compass, IPosition, Ship>) tabela[indice + 1];
+		AtomicInteger chamadas = new AtomicInteger();
+		BiFunction<Compass, IPosition, Ship> comFalhas =
+				(bearing, pos) -> chamadas.getAndIncrement() < 3 ? null : original.apply(bearing, pos);
+
+		tabela[indice + 1] = comFalhas;
+		try {
+			int esperado = Fleet.FLEET_SIZE;
+			IFleet frota = Fleet.createRandom();
+
+			assertEquals(esperado, frota.getShips().size());
+			assertTrue(chamadas.get() > 3, "as 3 primeiras chamadas devolveram null e foram repetidas");
+		} finally {
+			tabela[indice + 1] = original; // repoe sempre o construtor original
+		}
+	}
+
+	/** Devolve o array [chave, valor, chave, valor, ...] interno do Map.of usado em Ship, ou null se nao for possivel. */
+	private static Object[] obterTabelaInternaDoMapa() {
+		try {
+			Field campoMapa = Ship.class.getDeclaredField("SHIP_CONSTRUCTORS");
+			campoMapa.setAccessible(true);
+			Object mapa = campoMapa.get(null);
+
+			Class<?> classeUnsafe = Class.forName("sun.misc.Unsafe");
+			Field theUnsafe = classeUnsafe.getDeclaredField("theUnsafe");
+			theUnsafe.setAccessible(true);
+			Object unsafe = theUnsafe.get(null);
+
+			Method objectFieldOffset = classeUnsafe.getMethod("objectFieldOffset", Field.class);
+			Method getObject = classeUnsafe.getMethod("getObject", Object.class, long.class);
+
+			Field campoTabela = mapa.getClass().getDeclaredField("table");
+			long deslocamento = (Long) objectFieldOffset.invoke(unsafe, campoTabela);
+			return (Object[]) getObject.invoke(unsafe, mapa, deslocamento);
+		} catch (ReflectiveOperationException | RuntimeException e) {
+			return null;
+		}
 	}
 }
