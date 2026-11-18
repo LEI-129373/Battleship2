@@ -1,6 +1,7 @@
 package battleship;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeFalse;
 
 /**
  * Testes de TabuleiroGrafico com o objetivo de cobrir 100% dos branches.
@@ -22,10 +24,16 @@ import static org.junit.jupiter.api.Assertions.*;
  *  - resultado.repeated() == true (tiro repetido ignorado);
  *  - combinacoes completas de (!valid || repeated).
  *
- * Nota: requer ambiente grafico (nao headless), por exemplo com xvfb em CI.
+ * Nota: estes testes precisam de ambiente grafico. Em ambientes sem ecra
+ * (headless), como o GitHub Actions, sao ignorados (Skipped) em vez de falharem.
  */
 @DisplayName("Testes da classe TabuleiroGrafico")
 class TabuleiroGraficoTest {
+
+    @BeforeAll
+    static void requiresDisplay() {
+        assumeFalse(GraphicsEnvironment.isHeadless(), "Sem ecrã disponível: testes da GUI ignorados");
+    }
 
     @AfterEach
     void fecharJanelas() {
