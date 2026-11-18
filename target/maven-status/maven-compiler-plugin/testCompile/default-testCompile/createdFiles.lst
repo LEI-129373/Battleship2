@@ -1,0 +1,12 @@
+battleship/GameTest.class
+battleship/ShipTest.class
+battleship/FleetTest.class
+battleship/CaravelTest.class
+battleship/IGameTest.class
+battleship/BargeTest.class
+battleship/CarrackTest.class
+battleship/FrigateTest.class
+battleship/PositionTest.class
+battleship/TasksTest.class
+battleship/GalleonTest.class
+battleship/CompassTest.class
