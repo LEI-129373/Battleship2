@@ -3,13 +3,14 @@ package battleship;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class Game implements IGame
 {
-	/**
+    private final ShotStatistics shotStatistics = new ShotStatistics();
+
+    /**
 	 * Prints the game board. The drawing logic lives in {@link BoardPrinter}.
 	 *
 	 * @param fleet       the fleet of ships to be displayed on the board.
@@ -78,11 +79,7 @@ public class Game implements IGame
 	private final IFleet alienFleet;
 	private final List<IMove> myMoves;
 
-	private Integer countInvalidShots;
-	private Integer countRepeatedShots;
-	private Integer countHits;
-	private Integer countSinks;
-	private int moveNumber;
+    private int moveNumber;
 
 	//------------------------------------------------------------------
 	public Game(IFleet myFleet)
@@ -95,10 +92,10 @@ public class Game implements IGame
 		this.alienFleet = new Fleet();
 		this.myFleet = myFleet;
 
-		this.countInvalidShots = 0;
-		this.countRepeatedShots = 0;
-		this.countHits = 0;
-		this.countSinks = 0;
+        this.shotStatistics.countInvalidShots = 0;
+        this.shotStatistics.countRepeatedShots = 0;
+        this.shotStatistics.countHits = 0;
+        this.shotStatistics.countSinks = 0;
 	}
 
 	@Override
@@ -144,8 +141,7 @@ public class Game implements IGame
 			for (int c = 0; c < BOARD_SIZE; c++)
 				usablePositions.add(new Position(r, c));
 
-		this.myFleet.getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
-		this.alienMoves.forEach(move ->  usablePositions.removeAll(move.getShots()));
+		myFleet.removeUnavailablePositions(usablePositions, this);
 
 		List<IPosition> candidateShots = new ArrayList<>(usablePositions);
 
@@ -190,48 +186,13 @@ public class Game implements IGame
 		String input = in.nextLine().trim();
 
 		// Criar lista para armazenar os tiros
-		List<IPosition> shots = readShots(input);
+		List<IPosition> shots = ShotParser.readShots(input);
 
-		validateShotCount(shots);
+		ShotParser.validateShotCount(shots);
 
 		this.fireShots(shots);
 
 		return Game.jsonShots(shots);
-	}
-
-	private static @NotNull List<IPosition> readShots(String input) {
-		List<IPosition> shots = new ArrayList<>();
-
-		Scanner inputScanner = new Scanner(input);
-		while (shots.size() < NUMBER_SHOTS && inputScanner.hasNext()) {
-			// Lê a próxima parte e constrói uma posição
-			String token = inputScanner.next();
-
-			addShotFromToken(token, inputScanner, shots);
-		}
-		return shots;
-	}
-
-	private static void addShotFromToken(String token, Scanner inputScanner, List<IPosition> shots) {
-		if (token.matches("[A-Za-z]")) {
-			// Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
-			if (inputScanner.hasNextInt()) {
-				int row = inputScanner.nextInt();
-				shots.add(new Position(token.toUpperCase().charAt(0), row));
-			} else {
-				throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
-			}
-		} else {
-			// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
-			Scanner singleScanner = new Scanner(token);
-			shots.add(Tasks.readClassicPosition(singleScanner));
-		}
-	}
-
-	private static void validateShotCount(List<IPosition> shots) {
-		if (shots.size() != NUMBER_SHOTS) {
-			throw new IllegalArgumentException("Você deve inserir exatamente " + NUMBER_SHOTS + " posições!");
-		}
 	}
 
 	/**
@@ -287,12 +248,12 @@ public class Game implements IGame
 		assert pos != null;
 
 		if (!pos.isInside()) {
-			countInvalidShots++;
+            shotStatistics.countInvalidShots++;
 			return new ShotResult(false, false, null, false);
 		}
 
 		if (isRepeated || repeatedShot(pos)) {
-			countRepeatedShots++;
+            shotStatistics.countRepeatedShots++;
 			return new ShotResult(true, true, null, false);
 		}
 
@@ -302,9 +263,9 @@ public class Game implements IGame
 		else
 		{
 			ship.shoot(pos);
-			countHits++;
+            shotStatistics.countHits++;
 			if (!ship.stillFloating()) {
-				countSinks++;
+                shotStatistics.countSinks++;
 			}
 			return new ShotResult(true, false, ship, !ship.stillFloating());
 		}
@@ -313,26 +274,26 @@ public class Game implements IGame
 	@Override
 	public int getRepeatedShots()
 	{
-		return this.countRepeatedShots;
-	}
+        return shotStatistics.getRepeatedShots();
+    }
 
 	@Override
 	public int getInvalidShots()
 	{
-		return this.countInvalidShots;
-	}
+        return shotStatistics.getInvalidShots();
+    }
 
 	@Override
 	public int getHits()
 	{
-		return this.countHits;
-	}
+        return shotStatistics.getHits();
+    }
 
 	@Override
 	public int getSunkShips()
 	{
-		return this.countSinks;
-	}
+        return shotStatistics.getSunkShips();
+    }
 
 	@Override
 	public int getRemainingShips()
