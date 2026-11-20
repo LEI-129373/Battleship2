@@ -74,29 +74,33 @@ public class Move implements IMove {
 			if (result.repeated()) {
 				summary.repeatedShots++;
 			} else {
-				summary.validShots++;
-
-				if (result.ship() == null) {
-					summary.missedShots++;
-				} else {
-					String boatName = result.ship().getCategory();
-
-					summary.hitsPerBoat.put(
-							boatName,
-							summary.hitsPerBoat.getOrDefault(boatName, 0) + 1
-					);
-
-					if (result.sunk()) {
-						summary.sunkBoatsCount.put(
-								boatName,
-								summary.sunkBoatsCount.getOrDefault(boatName, 0) + 1
-						);
-					}
-				}
+				registerValidShots(result, summary);
 			}
 		}
 
 		return summary;
+	}
+
+	private static void registerValidShots(IGame.ShotResult result, FireSummary summary) {
+		summary.validShots++;
+
+		if (result.ship() == null) {
+			summary.missedShots++;
+		} else {
+			String boatName = result.ship().getCategory();
+
+			summary.hitsPerBoat.put(
+					boatName,
+					summary.hitsPerBoat.getOrDefault(boatName, 0) + 1
+			);
+
+			if (result.sunk()) {
+				summary.sunkBoatsCount.put(
+						boatName,
+						summary.sunkBoatsCount.getOrDefault(boatName, 0) + 1
+				);
+			}
+		}
 	}
 
 	private void printEnemyFireSummary(FireSummary summary, int outsideShots) {
