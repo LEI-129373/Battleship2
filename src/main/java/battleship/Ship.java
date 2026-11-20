@@ -5,65 +5,15 @@ package battleship;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.function.BiFunction;
 
 /**
  * The type Ship.
  */
 public abstract class Ship implements IShip
 {
-	/**
-	 * The constant GALEAO.
-	 */
-	private static final String GALEAO = "galeao";
-	/**
-	 * The constant FRAGATA.
-	 */
-	private static final String FRAGATA = "fragata";
-	/**
-	 * The constant NAU.
-	 */
-	private static final String NAU = "nau";
-	/**
-	 * The constant CARAVELA.
-	 */
-	private static final String CARAVELA = "caravela";
-	/**
-	 * The constant BARCA.
-	 */
-	private static final String BARCA = "barca";
 
-	/**
-	 * Create a new ship
-	 *
-	 * @param shipKind the ship kind
-	 * @param bearing  the bearing
-	 * @param pos      the pos
-	 * @return s ship
-	 */
-	static Ship buildShip(String shipKind, Compass bearing, Position pos)
-    {
-		assert shipKind != null;
-		assert bearing != null;
-		assert pos != null;
-
-		BiFunction<Compass, IPosition, Ship> constructor = SHIP_CONSTRUCTORS.get(shipKind);
-		return constructor == null ? null : constructor.apply(bearing, pos);
-    }
-
-	/**
-	 * Associa cada tipo de navio ao respetivo construtor (substitui o switch).
-	 */
-	private static final Map<String, BiFunction<Compass, IPosition, Ship>> SHIP_CONSTRUCTORS = Map.of(
-			BARCA, Barge::new,
-			CARAVELA, Caravel::new,
-			NAU, Carrack::new,
-			FRAGATA, Frigate::new,
-			GALEAO, Galleon::new);
-
-    //---------------------------------------------------------
+	//---------------------------------------------------------
 
 	/**
 	 * The Category.
