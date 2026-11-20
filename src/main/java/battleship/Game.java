@@ -3,6 +3,7 @@ package battleship;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -189,6 +190,16 @@ public class Game implements IGame
 		String input = in.nextLine().trim();
 
 		// Criar lista para armazenar os tiros
+		List<IPosition> shots = readShots(input);
+
+		validateShotCount(shots);
+
+		this.fireShots(shots);
+
+		return Game.jsonShots(shots);
+	}
+
+	private static @NotNull List<IPosition> readShots(String input) {
 		List<IPosition> shots = new ArrayList<>();
 
 		Scanner inputScanner = new Scanner(input);
@@ -196,28 +207,31 @@ public class Game implements IGame
 			// Lê a próxima parte e constrói uma posição
 			String token = inputScanner.next();
 
-			if (token.matches("[A-Za-z]")) {
-				// Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
-				if (inputScanner.hasNextInt()) {
-					int row = inputScanner.nextInt();
-					shots.add(new Position(token.toUpperCase().charAt(0), row));
-				} else {
-					throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
-				}
-			} else {
-				// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
-				Scanner singleScanner = new Scanner(token);
-				shots.add(Tasks.readClassicPosition(singleScanner));
-			}
+			addShotFromToken(token, inputScanner, shots);
 		}
+		return shots;
+	}
 
+	private static void addShotFromToken(String token, Scanner inputScanner, List<IPosition> shots) {
+		if (token.matches("[A-Za-z]")) {
+			// Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
+			if (inputScanner.hasNextInt()) {
+				int row = inputScanner.nextInt();
+				shots.add(new Position(token.toUpperCase().charAt(0), row));
+			} else {
+				throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
+			}
+		} else {
+			// Caso o token já contenha a coluna e a linha juntas (ex.: "A3")
+			Scanner singleScanner = new Scanner(token);
+			shots.add(Tasks.readClassicPosition(singleScanner));
+		}
+	}
+
+	private static void validateShotCount(List<IPosition> shots) {
 		if (shots.size() != NUMBER_SHOTS) {
 			throw new IllegalArgumentException("Você deve inserir exatamente " + NUMBER_SHOTS + " posições!");
 		}
-
-		this.fireShots(shots);
-
-		return Game.jsonShots(shots);
 	}
 
 	/**
