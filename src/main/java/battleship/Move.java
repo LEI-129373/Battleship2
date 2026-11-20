@@ -48,7 +48,7 @@ public class Move implements IMove {
 		FireSummary summary = calculateFireSummary();
 
 		int outsideShots = Game.NUMBER_SHOTS
-				- summary.validShots - summary.repeatedShots;
+				- summary.getValidShots() - summary.getRepeatedShots();
 
 		if (verbose) {
 			printEnemyFireSummary(summary, outsideShots);
@@ -72,7 +72,7 @@ public class Move implements IMove {
 			}
 
 			if (result.repeated()) {
-				summary.repeatedShots++;
+				summary.setRepeatedShots(summary.getRepeatedShots() + 1);
 			} else {
 				registerValidShots(result, summary);
 			}
@@ -82,22 +82,22 @@ public class Move implements IMove {
 	}
 
 	private static void registerValidShots(IGame.ShotResult result, FireSummary summary) {
-		summary.validShots++;
+		summary.setValidShots(summary.getValidShots() + 1);
 
 		if (result.ship() == null) {
-			summary.missedShots++;
+			summary.setMissedShots(summary.getMissedShots() + 1);
 		} else {
 			String boatName = result.ship().getCategory();
 
-			summary.hitsPerBoat.put(
+			summary.getHitsPerBoat().put(
 					boatName,
-					summary.hitsPerBoat.getOrDefault(boatName, 0) + 1
+					summary.getHitsPerBoat().getOrDefault(boatName, 0) + 1
 			);
 
 			if (result.sunk()) {
-				summary.sunkBoatsCount.put(
+				summary.getSunkBoatsCount().put(
 						boatName,
-						summary.sunkBoatsCount.getOrDefault(boatName, 0) + 1
+						summary.getSunkBoatsCount().getOrDefault(boatName, 0) + 1
 				);
 			}
 		}
@@ -106,12 +106,12 @@ public class Move implements IMove {
 	private void printEnemyFireSummary(FireSummary summary, int outsideShots) {
 		StringBuilder output = new StringBuilder();
 
-		if (summary.validShots == 0 && summary.repeatedShots > 0) {
-			appendRepeatedShots(output, summary.repeatedShots);
+		if (summary.getValidShots() == 0 && summary.getRepeatedShots() > 0) {
+			appendRepeatedShots(output, summary.getRepeatedShots());
 		} else {
-			appendValidShots(output, summary.validShots);
-			appendSunkBoats(output, summary.sunkBoatsCount);
-			appendBoatHits(output, summary.hitsPerBoat, summary.sunkBoatsCount);
+			appendValidShots(output, summary.getValidShots());
+			appendSunkBoats(output, summary.getSunkBoatsCount());
+			appendBoatHits(output, summary.getHitsPerBoat(), summary.getSunkBoatsCount());
 			appendMissedShots(output, summary);
 			appendRepeatedShotsAfterValid(output, summary);
 		}
@@ -170,13 +170,13 @@ public class Move implements IMove {
 	}
 
 	private void appendMissedShots(StringBuilder output, FireSummary summary) {
-		if (summary.missedShots > 0) {
-			output.append(summary.missedShots)
+		if (summary.getMissedShots() > 0) {
+			output.append(summary.getMissedShots())
 					.append(" tiro")
-					.append(summary.missedShots > 1 ? "s" : "")
+					.append(summary.getMissedShots() > 1 ? "s" : "")
 					.append(" na água");
-		} else if (!summary.sunkBoatsCount.isEmpty()
-				|| !summary.hitsPerBoat.isEmpty()) {
+		} else if (!summary.getSunkBoatsCount().isEmpty()
+				|| !summary.getHitsPerBoat().isEmpty()) {
 			output.setLength(output.length() - 2);
 		}
 	}
@@ -185,12 +185,12 @@ public class Move implements IMove {
 			StringBuilder output,
 			FireSummary summary) {
 
-		if (summary.repeatedShots > 0) {
-			if (summary.validShots > 0) {
+		if (summary.getRepeatedShots() > 0) {
+			if (summary.getValidShots() > 0) {
 				output.append(", ");
 			}
 
-			appendRepeatedShots(output, summary.repeatedShots);
+			appendRepeatedShots(output, summary.getRepeatedShots());
 		}
 	}
 
@@ -222,16 +222,16 @@ public class Move implements IMove {
 
 		Map<String, Object> response = new HashMap<>();
 
-		response.put("validShots", summary.validShots);
+		response.put("validShots", summary.getValidShots());
 		response.put("outsideShots", outsideShots);
-		response.put("repeatedShots", summary.repeatedShots);
-		response.put("missedShots", summary.missedShots);
+		response.put("repeatedShots", summary.getRepeatedShots());
+		response.put("missedShots", summary.getMissedShots());
 
-		response.put("sunkBoats", buildSunkBoats(summary.sunkBoatsCount));
+		response.put("sunkBoats", buildSunkBoats(summary.getSunkBoatsCount()));
 
 		response.put(
 				"hitsOnBoats",
-				buildBoatHits(summary.hitsPerBoat, summary.sunkBoatsCount)
+				buildBoatHits(summary.getHitsPerBoat(), summary.getSunkBoatsCount())
 		);
 
 		return response;
@@ -288,11 +288,43 @@ public class Move implements IMove {
 	}
 
 	private static class FireSummary {
-		int validShots;
-		int repeatedShots;
-		int missedShots;
+		private int validShots;
+		private int repeatedShots;
+		private int missedShots;
 
-		final Map<String, Integer> sunkBoatsCount = new HashMap<>();
-		final Map<String, Integer> hitsPerBoat = new HashMap<>();
+		private final Map<String, Integer> sunkBoatsCount = new HashMap<>();
+		private final Map<String, Integer> hitsPerBoat = new HashMap<>();
+
+		public int getValidShots() {
+			return validShots;
+		}
+
+		public void setValidShots(int validShots) {
+			this.validShots = validShots;
+		}
+
+		public int getRepeatedShots() {
+			return repeatedShots;
+		}
+
+		public void setRepeatedShots(int repeatedShots) {
+			this.repeatedShots = repeatedShots;
+		}
+
+		public int getMissedShots() {
+			return missedShots;
+		}
+
+		public void setMissedShots(int missedShots) {
+			this.missedShots = missedShots;
+		}
+
+		public Map<String, Integer> getSunkBoatsCount() {
+			return sunkBoatsCount;
+		}
+
+		public Map<String, Integer> getHitsPerBoat() {
+			return hitsPerBoat;
+		}
 	}
 }
