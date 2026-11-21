@@ -1,6 +1,6 @@
 # Oportunidades de Refabricação
 
-Oportunidades de refabricação identificadas pelo grupo com o MetricsTree, o Qodana, o SonarQube for IDE e revisão direta do código. Os nomes dos cheiros seguem o catálogo de Fowler.
+Oportunidades de refabricação identificadas pelo grupo com o MetricsTree, o Qodana, o SonarQube for IDE e revisão direta do código. Os nomes dos cheiros e das refabricações seguem os catálogos de Martin Fowler.
 
 Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos na fusão dos ramos `Refactoring_<nº>`.
 
@@ -11,15 +11,15 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `Game` | Large Class | Extract Class | 123282 |
 | `BoardPrinter::printBoard` | Long Parameter List | Introduce Parameter Object | 123282 |
 | `Game::jsonShots` | Duplicated Code | Extract Method / Move Method | 123282 |
-| `Game::fireShots` | Comments | Remove Dead Code / Clean Comments | 123282 |
-| `Game::readEnemyFire` | Primitive Obsession | Replace Primitive with Object | 123282 |
+| `Game::fireShots` | Comments | Extract Method + Rename Method | 123282 |
+| `Game::readEnemyFire` | Primitive Obsession | Replace Data Value with Object | 123282 |
 | `Tasks::menu` | Long Method | Extract Method | 98455 |
 | `HistoricoPdf::acrescentar` | Feature Envy | Move Method | 98455 |
 | `Tasks` | Large Class | Extract Class | 98455 |
 | `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
-| `Tasks::menu` | Switch Statements | Replace Conditional with Polymorphism / Command Pattern | 98455 |
+| `Tasks::menu` | Switch Statements | Replace Conditional with Polymorphism | 98455 |
 | `Tasks::menu` (casos `RAJADA` e `SIMULA`) | Duplicated Code | Extract Method | 98455 |
-| `Tasks` (`menu`, `menuHelp`, constantes) | Shotgun Surgery | Move Method / Inline Class (encapsular comandos) | 98455 |
+| `Tasks` (`menu`, `menuHelp`, constantes) | Shotgun Surgery | Move Method / Inline Class | 98455 |
 | `Move::calculateFireSummary` | Long Method | Extract Method | 129373 |
 | `TabuleiroGrafico::construir` | Feature Envy | Move Method | 129373 |
 | `Ship` | Large Class | Extract Class / Extract Subclass | 129373 |
