@@ -159,8 +159,8 @@ public class Tasks {
 				);
 
 				long id = bd.guardar(
-						game, "Jogador", "Adversario", null
-				);
+						game,
+						new HistoricoSqlite.Participantes("Jogador", "Adversario", null));
 
 				System.out.println("Partida guardada com sucesso! ID: " + id);
 
