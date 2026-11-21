@@ -1,0 +1,37 @@
+# Oportunidades de Refabricação
+
+Oportunidades de refabricação identificadas pelo grupo com o MetricsTree, o Qodana, o SonarQube for IDE e revisão direta do código. Os nomes dos cheiros seguem o catálogo de Fowler.
+
+Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos na fusão dos ramos `Refactoring_<nº>`.
+
+| Local | Cheiro no código | Refabricação | Nº de aluno |
+|---|---|---|---|
+| `Game::randomEnemyFire` | Long Method | Extract Method | 123282 |
+| `Game::randomEnemyFire` | Feature Envy | Move Method | 123282 |
+| `Game` | Large Class | Extract Class | 123282 |
+| `BoardPrinter::printBoard` | Long Parameter List | Introduce Parameter Object | 123282 |
+| `Game::jsonShots` | Duplicated Code | Extract Method / Move Method | 123282 |
+| `Game::fireShots` | Comments | Remove Dead Code / Clean Comments | 123282 |
+| `Game::readEnemyFire` | Primitive Obsession | Replace Primitive with Object | 123282 |
+| `Tasks::menu` | Long Method | Extract Method | 98455 |
+| `HistoricoPdf::acrescentar` | Feature Envy | Move Method | 98455 |
+| `Tasks` | Large Class | Extract Class | 98455 |
+| `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
+| `Tasks::menu` | Switch Statements | Replace Conditional with Polymorphism / Command Pattern | 98455 |
+| `Tasks::menu` (casos `RAJADA` e `SIMULA`) | Duplicated Code | Extract Method | 98455 |
+| `Tasks` (`menu`, `menuHelp`, constantes) | Shotgun Surgery | Move Method / Inline Class (encapsular comandos) | 98455 |
+| `Move::calculateFireSummary` | Long Method | Extract Method | 129373 |
+| `TabuleiroGrafico::construir` | Feature Envy | Move Method | 129373 |
+| `Ship` | Large Class | Extract Class / Extract Subclass | 129373 |
+| `Ship::Ship` (construtor) | Long Parameter List | Remove Parameter / Introduce Parameter Object | 129373 |
+| `Move.FireSummary` | Data Class | Move Method / Encapsulate Field | 129373 |
+| `Position::Position` (construtores) | Data Clumps | Introduce Parameter Object / Extract Method | 129373 |
+| `Main` | Lazy Class | Inline Class | 129373 |
+
+## Distribuição de ficheiros
+
+| Membro | Ficheiros exclusivos |
+|---|---|
+| 123282 | `Game.java`, `BoardPrinter.java` |
+| 98455 | `Tasks.java`, `HistoricoSqlite.java`, `HistoricoPdf.java` |
+| 129373 | `Move.java`, `Ship.java`, `TabuleiroGrafico.java`, `Position.java`, `Main.java` |
