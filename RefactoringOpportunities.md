@@ -26,7 +26,6 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `Ship::Ship` (construtor) | Long Parameter List | Remove Parameter / Introduce Parameter Object | 129373 |
 | `Move.FireSummary` | Data Class | Move Method / Encapsulate Field | 129373 |
 | `Position::Position` (construtores) | Data Clumps | Introduce Parameter Object / Extract Method | 129373 |
-| `Main` | Lazy Class | Inline Class | 129373 |
 
 ## Distribuição de ficheiros
 
