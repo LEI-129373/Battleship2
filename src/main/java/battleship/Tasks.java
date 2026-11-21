@@ -5,6 +5,8 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.file.Path;
 import java.io.IOException;
 
@@ -79,12 +81,7 @@ public class Tasks {
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							classificacao.registarVitoria("Adversario");
-							System.out.println("Partida terminada! Vitória registada.");
-							game = null;
-						}
+						game = terminarPartidaSeAcabou(game, classificacao);
 					}
 					break;
 				case SIMULA:
@@ -100,12 +97,7 @@ public class Tasks {
 							}
 						}
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							classificacao.registarVitoria("Adversario");
-							System.out.println("Partida terminada! Vitória registada.");
-							game = null;
-						}
+						game = terminarPartidaSeAcabou(game, classificacao);
 					}
 					break;
 				case TIROS:
@@ -147,6 +139,16 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static @Nullable IGame terminarPartidaSeAcabou(IGame game, ClassificacaoJogos classificacao) {
+		if (game.getRemainingShips() == 0) {
+			game.over();
+			classificacao.registarVitoria("Adversario");
+			System.out.println("Partida terminada! Vitória registada.");
+			game = null;
+		}
+		return game;
 	}
 
 	private static void guardarPartida(IGame game) {
