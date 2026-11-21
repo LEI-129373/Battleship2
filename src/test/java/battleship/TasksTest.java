@@ -208,7 +208,7 @@ class TasksTest {
 				+ "barca 20 20 n "           // fora do tabuleiro  -> addShip devolve false
 				+ ONZE_BARCAS;                // 11 sucessos
 
-		Fleet frota = Tasks.buildFleet(new Scanner(entrada));
+		Fleet frota = LeitorFrota.buildFleet(new Scanner(entrada));
 
 		assertEquals(11, frota.getShips().size());
 	}
@@ -218,7 +218,7 @@ class TasksTest {
 	@Test
 	@DisplayName("readShip: le tipo, posicao e orientacao e constroi o navio")
 	void readShipValido() {
-		Ship s = Tasks.readShip(new Scanner("barca 3 4 n"));
+		Ship s = LeitorFrota.readShip(new Scanner("barca 3 4 n"));
 
 		assertNotNull(s);
 		assertEquals("Barca", s.getCategory());
@@ -230,13 +230,13 @@ class TasksTest {
 	@Test
 	@DisplayName("readShip: tipo de navio desconhecido devolve null")
 	void readShipDesconhecido() {
-		assertNull(Tasks.readShip(new Scanner("xpto 3 4 n")));
+		assertNull(LeitorFrota.readShip(new Scanner("xpto 3 4 n")));
 	}
 
 	@Test
 	@DisplayName("readPosition: le linha e coluna")
 	void readPositionLeLinhaEColuna() {
-		Position p = Tasks.readPosition(new Scanner("5 6"));
+		Position p = LeitorFrota.readPosition(new Scanner("5 6"));
 
 		assertEquals(5, p.getRow());
 		assertEquals(6, p.getColumn());
@@ -305,21 +305,21 @@ class TasksTest {
 	@DisplayName("buildFleet: scanner nulo viola a pre-condicao (assert)")
 	void buildFleetScannerNulo() {
 		assumeTrue(assercoesAtivas(), "requer assercoes ativas (-ea)");
-		assertThrows(AssertionError.class, () -> Tasks.buildFleet(null));
+		assertThrows(AssertionError.class, () -> LeitorFrota.buildFleet(null));
 	}
 
 	@Test
 	@DisplayName("readShip: scanner nulo viola a pre-condicao (assert)")
 	void readShipScannerNulo() {
 		assumeTrue(assercoesAtivas(), "requer assercoes ativas (-ea)");
-		assertThrows(AssertionError.class, () -> Tasks.readShip(null));
+		assertThrows(AssertionError.class, () -> LeitorFrota.readShip(null));
 	}
 
 	@Test
 	@DisplayName("readPosition: scanner nulo viola a pre-condicao (assert)")
 	void readPositionScannerNulo() {
 		assumeTrue(assercoesAtivas(), "requer assercoes ativas (-ea)");
-		assertThrows(AssertionError.class, () -> Tasks.readPosition(null));
+		assertThrows(AssertionError.class, () -> LeitorFrota.readPosition(null));
 	}
 
 	// ---------------------------------------------------------------- auxiliares
