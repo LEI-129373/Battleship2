@@ -34,6 +34,7 @@ public class Tasks {
 	private static final String GUARDAR = "guardar";
 	private static final String GRAFICO = "grafico";
 	private static final String CLASSIFICACAO = "classificacao";
+	private static final String MSG_SEM_PARTIDA = "Primeiro tens de criar uma partida!";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -120,7 +121,7 @@ public class Tasks {
 					if (game != null) {
 						TabuleiroGrafico.mostrar(game, true);
 					} else {
-						System.out.println("Primeiro tens de criar uma partida!");
+						System.out.println(MSG_SEM_PARTIDA);
 					}
 					break;
 				case CLASSIFICACAO:
@@ -162,7 +163,7 @@ public class Tasks {
 				System.out.println("Erro ao guardar: " + e.getMessage());
 			}
 		} else {
-			System.out.println("Primeiro tens de criar uma partida!");
+			System.out.println(MSG_SEM_PARTIDA);
 		}
 	}
 
