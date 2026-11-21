@@ -17,7 +17,7 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `HistoricoPdf::acrescentar` | Feature Envy | Extract Method + Move Method | 98455 |
 | `Tasks` | Large Class | Extract Class | 98455 |
 | `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
-| `Tasks::menu` | Switch Statements | Replace Conditional with Polymorphism | 98455 |
+| `Tasks::readClassicPosition` | Comments | Introduce Explaining Variable | 98455 |
 | `Tasks::menu` (casos `RAJADA` e `SIMULA`) | Duplicated Code | Extract Method | 98455 |
 | `Tasks` (`menu`, `menuHelp`, constantes) | Shotgun Surgery | Move Method / Inline Class | 98455 |
 | `Move::calculateFireSummary` | Long Method | Extract Method | 129373 |
