@@ -128,24 +128,7 @@ public class Tasks {
 					}
 					break;
 				case GUARDAR:
-					if (game != null) {
-						try {
-							HistoricoSqlite bd = new HistoricoSqlite(
-									java.nio.file.Path.of("partidas.db")
-							);
-
-							long id = bd.guardar(
-									game, "Jogador", "Adversario", null
-							);
-
-							System.out.println("Partida guardada com sucesso! ID: " + id);
-
-						} catch (java.sql.SQLException e) {
-							System.out.println("Erro ao guardar: " + e.getMessage());
-						}
-					} else {
-						System.out.println("Primeiro tens de criar uma partida!");
-					}
+					guardarPartida(game);
 					break;
 				case GRAFICO:
 					if (game != null) {
@@ -164,6 +147,27 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static void guardarPartida(IGame game) {
+		if (game != null) {
+			try {
+				HistoricoSqlite bd = new HistoricoSqlite(
+						Path.of("partidas.db")
+				);
+
+				long id = bd.guardar(
+						game, "Jogador", "Adversario", null
+				);
+
+				System.out.println("Partida guardada com sucesso! ID: " + id);
+
+			} catch (java.sql.SQLException e) {
+				System.out.println("Erro ao guardar: " + e.getMessage());
+			}
+		} else {
+			System.out.println("Primeiro tens de criar uma partida!");
+		}
 	}
 
 	/**
