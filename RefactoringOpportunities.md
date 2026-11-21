@@ -14,7 +14,7 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `Game::fireShots` | Comments | Extract Method + Rename Method | 123282 |
 | `Game::readEnemyFire` | Primitive Obsession | Replace Data Value with Object | 123282 |
 | `Tasks::menu` | Long Method | Extract Method | 98455 |
-| `HistoricoPdf::acrescentar` | Feature Envy | Move Method | 98455 |
+| `HistoricoPdf::acrescentar` | Feature Envy | Extract Method + Move Method | 98455 |
 | `Tasks` | Large Class | Extract Class | 98455 |
 | `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
 | `Tasks::menu` | Switch Statements | Replace Conditional with Polymorphism | 98455 |
@@ -26,6 +26,7 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `Ship::Ship` (construtor) | Long Parameter List | Remove Parameter / Introduce Parameter Object | 129373 |
 | `Move.FireSummary` | Data Class | Move Method / Encapsulate Field | 129373 |
 | `Position::Position` (construtores) | Data Clumps | Introduce Parameter Object / Extract Method | 129373 |
+| `Main` | Lazy Class | Inline Class | 129373 |
 
 ## Distribuição de ficheiros
 
