@@ -11,6 +11,6 @@ record ClassicCoordinate(char column, int row) {
     }
 
     IPosition toPosition() {
-        return new Position(column, row);
+        return Position.createPosition(column, row);
     }
 }

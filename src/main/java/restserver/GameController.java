@@ -112,7 +112,7 @@ public class GameController {
 				return error(HttpStatus.BAD_REQUEST,
 						"Invalid position: row='" + sp.row + "' column=" + sp.column);
 			}
-			positions.add(new Position(sp.row.toUpperCase().charAt(0), sp.column));
+			positions.add(Position.createPosition(sp.row.toUpperCase().charAt(0), sp.column));
 		}
 
 		// ── 4. Fire student's shots at the AI's fleet (m1b logic) ────────────

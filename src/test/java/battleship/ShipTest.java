@@ -160,11 +160,11 @@ public class ShipTest {
     @Test
     @DisplayName("Test buildShip returns the ship of the requested category for every kind")
     void testBuildShipCategories() {
-        assertEquals("Barca", Ship.buildShip("barca", Compass.NORTH, new Position(2, 2)).getCategory());
-        assertEquals("Caravela", Ship.buildShip("caravela", Compass.NORTH, new Position(2, 2)).getCategory());
-        assertEquals("Nau", Ship.buildShip("nau", Compass.NORTH, new Position(2, 2)).getCategory());
-        assertEquals("Fragata", Ship.buildShip("fragata", Compass.NORTH, new Position(2, 2)).getCategory());
-        assertEquals("Galeao", Ship.buildShip("galeao", Compass.NORTH, new Position(2, 2)).getCategory());
+        assertEquals("Barca", ShipFactory.buildShip("barca", Compass.NORTH, new Position(2, 2)).getCategory());
+        assertEquals("Caravela", ShipFactory.buildShip("caravela", Compass.NORTH, new Position(2, 2)).getCategory());
+        assertEquals("Nau", ShipFactory.buildShip("nau", Compass.NORTH, new Position(2, 2)).getCategory());
+        assertEquals("Fragata", ShipFactory.buildShip("fragata", Compass.NORTH, new Position(2, 2)).getCategory());
+        assertEquals("Galeao", ShipFactory.buildShip("galeao", Compass.NORTH, new Position(2, 2)).getCategory());
     }
 
     @AfterEach
@@ -186,14 +186,14 @@ public class ShipTest {
     @Test
     @DisplayName("Test buildShip static method with all kinds and unknown kind")
     void testBuildShipAllTypes() {
-        assertNotNull(Ship.buildShip("barca", Compass.NORTH, new Position(2, 2)));
-        assertNotNull(Ship.buildShip("caravela", Compass.NORTH, new Position(2, 2)));
-        assertNotNull(Ship.buildShip("nau", Compass.NORTH, new Position(2, 2)));
-        assertNotNull(Ship.buildShip("fragata", Compass.NORTH, new Position(2, 2)));
-        assertNotNull(Ship.buildShip("galeao", Compass.NORTH, new Position(2, 2)));
+        assertNotNull(ShipFactory.buildShip("barca", Compass.NORTH, new Position(2, 2)));
+        assertNotNull(ShipFactory.buildShip("caravela", Compass.NORTH, new Position(2, 2)));
+        assertNotNull(ShipFactory.buildShip("nau", Compass.NORTH, new Position(2, 2)));
+        assertNotNull(ShipFactory.buildShip("fragata", Compass.NORTH, new Position(2, 2)));
+        assertNotNull(ShipFactory.buildShip("galeao", Compass.NORTH, new Position(2, 2)));
 
         // Testa o ramo em que o construtor é null (retorna null)
-        assertNull(Ship.buildShip("desconhecido", Compass.NORTH, new Position(2, 2)));
+        assertNull(ShipFactory.buildShip("desconhecido", Compass.NORTH, new Position(2, 2)));
     }
 
     @Test
@@ -365,9 +365,9 @@ public class ShipTest {
     @Test
     @DisplayName("Test assertions failure branches when -ea is enabled")
     void testAssertions() {
-        assertThrows(AssertionError.class, () -> Ship.buildShip(null, Compass.NORTH, new Position(1, 1)));
-        assertThrows(AssertionError.class, () -> Ship.buildShip("barca", null, new Position(1, 1)));
-        assertThrows(AssertionError.class, () -> Ship.buildShip("barca", Compass.NORTH, null));
+        assertThrows(AssertionError.class, () -> ShipFactory.buildShip(null, Compass.NORTH, new Position(1, 1)));
+        assertThrows(AssertionError.class, () -> ShipFactory.buildShip("barca", null, new Position(1, 1)));
+        assertThrows(AssertionError.class, () -> ShipFactory.buildShip("barca", Compass.NORTH, null));
         assertThrows(AssertionError.class, () -> ship.occupies(null));
         assertThrows(AssertionError.class, () -> ship.tooCloseTo((IShip) null));
         assertThrows(AssertionError.class, () -> ship.tooCloseTo((IPosition) null));

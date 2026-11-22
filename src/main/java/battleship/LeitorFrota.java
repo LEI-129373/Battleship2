@@ -53,7 +53,7 @@ public class LeitorFrota {
         Position pos = readPosition(in);
         char c = in.next().charAt(0);
         Compass bearing = Compass.charToCompass(c);
-        return Ship.buildShip(shipKind, bearing, pos);
+        return ShipFactory.buildShip(shipKind, bearing, pos);
     }
 
     /**

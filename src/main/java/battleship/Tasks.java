@@ -216,11 +216,11 @@ public class Tasks {
 		if (input.matches("[A-Z]\\d+")) {
 			char column = input.charAt(0); // Extrair a coluna
 			int row = Integer.parseInt(input.substring(1)); // Extrair a linha
-			return new Position(column, row);
+			return Position.createPosition(column, row);
 		} else if (part2 != null && part1.matches("[A-Z]") && part2.matches("\\d+")) {
 			char column = part1.charAt(0); // Extrair a coluna
 			int row = Integer.parseInt(part2); // Extrair a linha
-			return new Position(column, row);
+			return Position.createPosition(column, row);
 		} else {
 			throw new IllegalArgumentException("Formato inválido. Use 'A3', 'A 3' ou similar.");
 		}

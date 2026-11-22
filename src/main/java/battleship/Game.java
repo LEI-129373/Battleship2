@@ -306,4 +306,29 @@ public class Game implements IGame
 		System.out.println("| Maldito sejas, Java Sparrow, eu voltarei, glub glub glub ... |");
 		System.out.println("+--------------------------------------------------------------+");
 	}
+
+	/**
+	 * Constrói o mapa de caracteres de um tabuleiro para apresentação gráfica.
+	 *
+	 * @param jogo    o jogo em curso
+	 * @param proprio {@code true} para o tabuleiro próprio, {@code false} para o do adversário
+	 * @return a matriz com '.', '#', 'o' e 'X'
+	 */
+	static char[][] construir(IGame jogo, boolean proprio) {
+		char[][] mapa = new char[Game.BOARD_SIZE][Game.BOARD_SIZE];
+		for (char[] linha : mapa) java.util.Arrays.fill(linha, '.');
+		IFleet frota = proprio ? jogo.getMyFleet() : jogo.getAlienFleet();
+		if (proprio) for (IShip navio : frota.getShips()) for (IPosition p : navio.getPositions())
+			if (p.isInside()) mapa[p.getRow()][p.getColumn()] = '#';
+		java.util.List<IMove> jogadas = proprio ? jogo.getAlienMoves() : jogo.getMyMoves();
+		for (IMove jogada : jogadas) for (int i = 0; i < jogada.getShots().size(); i++) {
+			IPosition p = jogada.getShots().get(i);
+			if (!p.isInside()) continue;
+			if (i >= jogada.getShotResults().size()) continue;
+			IGame.ShotResult resultado = jogada.getShotResults().get(i);
+			if (!resultado.valid() || resultado.repeated()) continue;
+			mapa[p.getRow()][p.getColumn()] = resultado.ship() == null ? 'o' : 'X';
+		}
+		return mapa;
+	}
 }
