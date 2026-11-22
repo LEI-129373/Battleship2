@@ -22,10 +22,9 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `ClassificacaoJogos.Resultado` (componente `derrotas`) | Speculative Generality | Remove Parameter | 98455 |
 | `Move::calculateFireSummary` | Long Method | Extract Method | 129373 |
 | `TabuleiroGrafico::construir` | Feature Envy | Move Method | 129373 |
-| `Ship` | Large Class | Extract Class / Extract Subclass | 129373 |
-| `Ship::Ship` (construtor) | Long Parameter List | Remove Parameter / Introduce Parameter Object | 129373 |
-| `Move.FireSummary` | Data Class | Move Method / Encapsulate Field | 129373 |
-| `Position::Position` (construtores) | Data Clumps | Introduce Parameter Object / Extract Method | 129373 |
+| `Ship::Ship` (construtor) | Long Parameter List | Remove Parameter | 129373 |
+| `Move.FireSummary` | Data Class | Encapsulate Field | 129373 |
+| `Position::Position` (construtores) | Data Clumps | Replace Constructor with Factory Method | 129373 |
 
 ## Distribuição de ficheiros
 
