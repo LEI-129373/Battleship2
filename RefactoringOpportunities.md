@@ -13,9 +13,9 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `Game::jsonShots` | Duplicated Code | Extract Method / Move Method | 123282 |
 | `Game::fireShots` | Comments | Extract Method + Rename Method | 123282 |
 | `Game::readEnemyFire` | Primitive Obsession | Replace Data Value with Object | 123282 |
-| `Tasks::menu` | Long Method | Extract Method | 98455 |
+| `Tasks::menu` (caso `GUARDAR`) | Long Method | Extract Method | 98455 |
 | `HistoricoPdf::acrescentar` | Feature Envy | Extract Method + Move Method | 98455 |
-| `Tasks` | Large Class | Extract Class | 98455 |
+| `Tasks` (leitura da frota extraída para `LeitorFrota`) | Large Class | Extract Class | 98455 |
 | `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
 | `Tasks::menu` (caso `GRAFICO`) e `Tasks::guardarPartida` | Duplicated Code | Replace Magic Number with Symbolic Constant | 98455 |
 | `Tasks::menu` (casos `RAJADA` e `SIMULA`) | Duplicated Code | Extract Method | 98455 |
