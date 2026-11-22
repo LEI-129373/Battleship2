@@ -45,7 +45,7 @@ public class Position implements IPosition {
 	 * @param classicRow    the row coordinate of the position
 	 * @param classicColumn the column coordinate of the position
 	 */
-	public Position(char classicRow, int classicColumn) {
+    private Position(char classicRow, int classicColumn) {
 		this.row = Character.toUpperCase(classicRow) - 'A';
 		this.column = classicColumn-1;
 		this.isOccupied = false;
@@ -66,7 +66,11 @@ public class Position implements IPosition {
 		this.isHit = false;
 	}
 
-	/**
+    public static Position createPosition(char classicRow, int classicColumn) {
+        return new Position(classicRow, classicColumn);
+    }
+
+    /**
 	 * Returns the row coordinate of the position.
 	 *
 	 * @return the row coordinate

@@ -2,9 +2,9 @@ package battleship;
 
 import java.util.Scanner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.nio.file.Path;
 import java.io.IOException;
 
@@ -12,10 +12,6 @@ import java.io.IOException;
  * The type Tasks.
  */
 public class Tasks {
-	/**
-	 * The constant LOGGER.
-	 */
-	private static final Logger LOGGER = LogManager.getLogger();
 
 	/**
 	 * The constant GOODBYE_MESSAGE.
@@ -38,6 +34,7 @@ public class Tasks {
 	private static final String GUARDAR = "guardar";
 	private static final String GRAFICO = "grafico";
 	private static final String CLASSIFICACAO = "classificacao";
+	private static final String MSG_SEM_PARTIDA = "Primeiro tens de criar uma partida!";
 
 	/**
 	 * This task also tests the fighting element of a round of three shots
@@ -61,7 +58,7 @@ public class Tasks {
 					game.printMyBoard(false, true);
 					break;
 				case LEFROTA:
-					myFleet = buildFleet(in);
+					myFleet = LeitorFrota.buildFleet(in);
 					game = new Game(myFleet);
 					game.printMyBoard(false, true);
 					break;
@@ -79,12 +76,7 @@ public class Tasks {
 						myFleet.printStatus();
 						game.printMyBoard(true, false);
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							classificacao.registarVitoria("Adversario");
-							System.out.println("Partida terminada! Vitória registada.");
-							game = null;
-						}
+						game = terminarPartidaSeAcabou(game, classificacao);
 					}
 					break;
 				case SIMULA:
@@ -100,12 +92,7 @@ public class Tasks {
 							}
 						}
 
-						if (game.getRemainingShips() == 0) {
-							game.over();
-							classificacao.registarVitoria("Adversario");
-							System.out.println("Partida terminada! Vitória registada.");
-							game = null;
-						}
+						game = terminarPartidaSeAcabou(game, classificacao);
 					}
 					break;
 				case TIROS:
@@ -128,30 +115,13 @@ public class Tasks {
 					}
 					break;
 				case GUARDAR:
-					if (game != null) {
-						try {
-							HistoricoSqlite bd = new HistoricoSqlite(
-									java.nio.file.Path.of("partidas.db")
-							);
-
-							long id = bd.guardar(
-									game, "Jogador", "Adversario", null
-							);
-
-							System.out.println("Partida guardada com sucesso! ID: " + id);
-
-						} catch (java.sql.SQLException e) {
-							System.out.println("Erro ao guardar: " + e.getMessage());
-						}
-					} else {
-						System.out.println("Primeiro tens de criar uma partida!");
-					}
+					guardarPartida(game);
 					break;
 				case GRAFICO:
 					if (game != null) {
 						TabuleiroGrafico.mostrar(game, true);
 					} else {
-						System.out.println("Primeiro tens de criar uma partida!");
+						System.out.println(MSG_SEM_PARTIDA);
 					}
 					break;
 				case CLASSIFICACAO:
@@ -164,6 +134,37 @@ public class Tasks {
 			command = in.next();
 		}
 		System.out.println(GOODBYE_MESSAGE);
+	}
+
+	private static @Nullable IGame terminarPartidaSeAcabou(IGame game, ClassificacaoJogos classificacao) {
+		if (game.getRemainingShips() == 0) {
+			game.over();
+			classificacao.registarVitoria("Adversario");
+			System.out.println("Partida terminada! Vitória registada.");
+			game = null;
+		}
+		return game;
+	}
+
+	private static void guardarPartida(IGame game) {
+		if (game != null) {
+			try {
+				HistoricoSqlite bd = new HistoricoSqlite(
+						Path.of("partidas.db")
+				);
+
+				long id = bd.guardar(
+						game,
+						new HistoricoSqlite.Participantes("Jogador", "Adversario", null));
+
+				System.out.println("Partida guardada com sucesso! ID: " + id);
+
+			} catch (java.sql.SQLException e) {
+				System.out.println("Erro ao guardar: " + e.getMessage());
+			}
+		} else {
+			System.out.println(MSG_SEM_PARTIDA);
+		}
 	}
 
 	/**
@@ -185,65 +186,6 @@ public class Tasks {
 		System.out.println("- " + GRAFICO + ": Fazer a GUI.");
 		System.out.println("- " + CLASSIFICACAO + ": Mostrar a classificação dos jogadores.");
 		System.out.println("===============================================================");
-	}
-	/**
-	 * This operation allows the build up of a fleet, given user data
-	 *
-	 * @param in The scanner to read from
-	 * @return The fleet that has been built
-	 */
-	public static Fleet buildFleet(Scanner in) {
-
-		assert in != null;
-
-		Fleet fleet = new Fleet();
-		int i = 0; // i represents the total of successfully created ships
-		while (i < Fleet.FLEET_SIZE) {
-			IShip s = readShip(in);
-			if (s != null) {
-				boolean success = fleet.addShip(s);
-				if (success)
-					i++;
-				else
-					LOGGER.info("Falha na criacao de {} {} {}", s.getCategory(), s.getBearing(), s.getPosition());
-			} else {
-				LOGGER.info("Navio desconhecido!");
-			}
-		}
-		LOGGER.info("{} navios adicionados com sucesso!", i);
-		return fleet;
-	}
-
-	/**
-	 * This operation reads data about a ship, build it and returns it
-	 *
-	 * @param in The scanner to read from
-	 * @return The created ship based on the data that has been read
-	 */
-	public static Ship readShip(Scanner in) {
-
-		assert in != null;
-
-		String shipKind = in.next();
-		Position pos = readPosition(in);
-		char c = in.next().charAt(0);
-		Compass bearing = Compass.charToCompass(c);
-		return Ship.buildShip(shipKind, bearing, pos);
-	}
-
-	/**
-	 * This operation allows reading a position in the map
-	 *
-	 * @param in The scanner to read from
-	 * @return The position that has been read
-	 */
-	public static Position readPosition(Scanner in) {
-
-		assert in != null;
-
-		int row = in.nextInt();
-		int column = in.nextInt();
-		return new Position(row, column);
 	}
 
 	/**

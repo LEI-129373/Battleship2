@@ -1,0 +1,444 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Move</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">battleship</a>
+</div>
+
+<h1>Coverage Summary for Class: Move (battleship)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Move</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (19/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (62/62)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (123/123)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Move$FireSummary</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (3/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (20/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (62/62)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (126/126)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;
+&nbsp;package battleship;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import com.fasterxml.jackson.databind.SerializationFeature;
+&nbsp;
+&nbsp;import java.util.*;
+&nbsp;
+&nbsp;public class Move implements IMove {
+&nbsp;
+&nbsp;	private final int number;
+&nbsp;	private final List&lt;IPosition&gt; shots;
+&nbsp;	private final List&lt;IGame.ShotResult&gt; shotResults;
+&nbsp;
+<b class="fc">&nbsp;	public Move(int moveNumber, List&lt;IPosition&gt; moveShots, List&lt;IGame.ShotResult&gt; moveResults) {</b>
+<b class="fc">&nbsp;		this.number = moveNumber;</b>
+<b class="fc">&nbsp;		this.shots = moveShots;</b>
+<b class="fc">&nbsp;		this.shotResults = moveResults;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String toString() {
+<b class="fc">&nbsp;		return &quot;Move{&quot; +</b>
+&nbsp;				&quot;number=&quot; + number +
+<b class="fc">&nbsp;				&quot;, shots=&quot; + shots.size() +</b>
+<b class="fc">&nbsp;				&quot;, results=&quot; + shotResults.size() +</b>
+&nbsp;				&#39;}&#39;;
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public int getNumber() {
+<b class="fc">&nbsp;		return this.number;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;IPosition&gt; getShots() {
+<b class="fc">&nbsp;		return this.shots;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public List&lt;IGame.ShotResult&gt; getShotResults() {
+<b class="fc">&nbsp;		return this.shotResults;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	@Override
+&nbsp;	public String processEnemyFire(boolean verbose) {
+<b class="fc">&nbsp;		FireSummary summary = calculateFireSummary();</b>
+&nbsp;
+<b class="fc">&nbsp;		int outsideShots = Game.NUMBER_SHOTS</b>
+&nbsp;				- summary.validShots - summary.repeatedShots;
+&nbsp;
+<b class="fc">&nbsp;		if (verbose) {</b>
+<b class="fc">&nbsp;			printEnemyFireSummary(summary, outsideShots);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		Map&lt;String, Object&gt; response = buildEnemyFireResponse(summary, outsideShots);</b>
+<b class="fc">&nbsp;		String jsonString = serializeResponse(response);</b>
+&nbsp;
+<b class="fc">&nbsp;		System.out.println(jsonString);</b>
+<b class="fc">&nbsp;		System.out.println();</b>
+&nbsp;
+<b class="fc">&nbsp;		return jsonString;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private FireSummary calculateFireSummary() {
+<b class="fc">&nbsp;		FireSummary summary = new FireSummary();</b>
+&nbsp;
+<b class="fc">&nbsp;		for (IGame.ShotResult result : this.shotResults) {</b>
+<b class="fc">&nbsp;			if (!result.valid()) {</b>
+&nbsp;				continue;
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			if (result.repeated()) {</b>
+<b class="fc">&nbsp;				summary.repeatedShots++;</b>
+&nbsp;			} else {
+<b class="fc">&nbsp;				summary.validShots++;</b>
+&nbsp;
+<b class="fc">&nbsp;				if (result.ship() == null) {</b>
+<b class="fc">&nbsp;					summary.missedShots++;</b>
+&nbsp;				} else {
+<b class="fc">&nbsp;					String boatName = result.ship().getCategory();</b>
+&nbsp;
+<b class="fc">&nbsp;					summary.hitsPerBoat.put(</b>
+&nbsp;							boatName,
+<b class="fc">&nbsp;							summary.hitsPerBoat.getOrDefault(boatName, 0) + 1</b>
+&nbsp;					);
+&nbsp;
+<b class="fc">&nbsp;					if (result.sunk()) {</b>
+<b class="fc">&nbsp;						summary.sunkBoatsCount.put(</b>
+&nbsp;								boatName,
+<b class="fc">&nbsp;								summary.sunkBoatsCount.getOrDefault(boatName, 0) + 1</b>
+&nbsp;						);
+&nbsp;					}
+&nbsp;				}
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		return summary;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void printEnemyFireSummary(FireSummary summary, int outsideShots) {
+<b class="fc">&nbsp;		StringBuilder output = new StringBuilder();</b>
+&nbsp;
+<b class="fc">&nbsp;		if (summary.validShots == 0 &amp;&amp; summary.repeatedShots &gt; 0) {</b>
+<b class="fc">&nbsp;			appendRepeatedShots(output, summary.repeatedShots);</b>
+&nbsp;		} else {
+<b class="fc">&nbsp;			appendValidShots(output, summary.validShots);</b>
+<b class="fc">&nbsp;			appendSunkBoats(output, summary.sunkBoatsCount);</b>
+<b class="fc">&nbsp;			appendBoatHits(output, summary.hitsPerBoat, summary.sunkBoatsCount);</b>
+<b class="fc">&nbsp;			appendMissedShots(output, summary);</b>
+<b class="fc">&nbsp;			appendRepeatedShotsAfterValid(output, summary);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		appendOutsideShots(output, outsideShots);</b>
+&nbsp;
+<b class="fc">&nbsp;		System.out.println(&quot;Jogada nº&quot; + this.number + &quot; -&gt; &quot; + output);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendValidShots(StringBuilder output, int validShots) {
+<b class="fc">&nbsp;		if (validShots &gt; 0) {</b>
+<b class="fc">&nbsp;			output.append(validShots)</b>
+<b class="fc">&nbsp;					.append(&quot; tiro&quot;)</b>
+<b class="fc">&nbsp;					.append(validShots &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;					.append(&quot; válido&quot;)</b>
+<b class="fc">&nbsp;					.append(validShots &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;					.append(&quot;: &quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendSunkBoats(
+&nbsp;			StringBuilder output,
+&nbsp;			Map&lt;String, Integer&gt; sunkBoatsCount) {
+&nbsp;
+<b class="fc">&nbsp;		for (Map.Entry&lt;String, Integer&gt; entry : sunkBoatsCount.entrySet()) {</b>
+<b class="fc">&nbsp;			String boatName = entry.getKey();</b>
+<b class="fc">&nbsp;			int count = entry.getValue();</b>
+&nbsp;
+<b class="fc">&nbsp;			output.append(count)</b>
+<b class="fc">&nbsp;					.append(&quot; &quot;)</b>
+<b class="fc">&nbsp;					.append(boatName)</b>
+<b class="fc">&nbsp;					.append(count &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;					.append(&quot; ao fundo&quot;)</b>
+<b class="fc">&nbsp;					.append(&quot; + &quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendBoatHits(
+&nbsp;			StringBuilder output,
+&nbsp;			Map&lt;String, Integer&gt; hitsPerBoat,
+&nbsp;			Map&lt;String, Integer&gt; sunkBoatsCount) {
+&nbsp;
+<b class="fc">&nbsp;		for (Map.Entry&lt;String, Integer&gt; entry : hitsPerBoat.entrySet()) {</b>
+<b class="fc">&nbsp;			String boatName = entry.getKey();</b>
+<b class="fc">&nbsp;			int hits = entry.getValue();</b>
+&nbsp;
+<b class="fc">&nbsp;			if (!sunkBoatsCount.containsKey(boatName)) {</b>
+<b class="fc">&nbsp;				output.append(hits)</b>
+<b class="fc">&nbsp;						.append(&quot; tiro&quot;)</b>
+<b class="fc">&nbsp;						.append(hits &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;						.append(&quot; num(a) &quot;)</b>
+<b class="fc">&nbsp;						.append(boatName)</b>
+<b class="fc">&nbsp;						.append(&quot; + &quot;);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendMissedShots(StringBuilder output, FireSummary summary) {
+<b class="fc">&nbsp;		if (summary.missedShots &gt; 0) {</b>
+<b class="fc">&nbsp;			output.append(summary.missedShots)</b>
+<b class="fc">&nbsp;					.append(&quot; tiro&quot;)</b>
+<b class="fc">&nbsp;					.append(summary.missedShots &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;					.append(&quot; na água&quot;);</b>
+<b class="fc">&nbsp;		} else if (!summary.sunkBoatsCount.isEmpty()</b>
+<b class="fc">&nbsp;				|| !summary.hitsPerBoat.isEmpty()) {</b>
+<b class="fc">&nbsp;			output.setLength(output.length() - 2);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendRepeatedShotsAfterValid(
+&nbsp;			StringBuilder output,
+&nbsp;			FireSummary summary) {
+&nbsp;
+<b class="fc">&nbsp;		if (summary.repeatedShots &gt; 0) {</b>
+<b class="fc">&nbsp;			if (summary.validShots &gt; 0) {</b>
+<b class="fc">&nbsp;				output.append(&quot;, &quot;);</b>
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			appendRepeatedShots(output, summary.repeatedShots);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendRepeatedShots(StringBuilder output, int repeatedShots) {
+<b class="fc">&nbsp;		output.append(repeatedShots)</b>
+<b class="fc">&nbsp;				.append(&quot; tiro&quot;)</b>
+<b class="fc">&nbsp;				.append(repeatedShots &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;				.append(&quot; repetido&quot;)</b>
+<b class="fc">&nbsp;				.append(repeatedShots &gt; 1 ? &quot;s&quot; : &quot;&quot;);</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private void appendOutsideShots(StringBuilder output, int outsideShots) {
+<b class="fc">&nbsp;		if (outsideShots &gt; 0) {</b>
+<b class="fc">&nbsp;			if (!output.isEmpty()) {</b>
+<b class="fc">&nbsp;				output.append(&quot;, &quot;);</b>
+&nbsp;			}
+&nbsp;
+<b class="fc">&nbsp;			output.append(outsideShots)</b>
+<b class="fc">&nbsp;					.append(&quot; tiro&quot;)</b>
+<b class="fc">&nbsp;					.append(outsideShots &gt; 1 ? &quot;s&quot; : &quot;&quot;)</b>
+<b class="fc">&nbsp;					.append(&quot; exterior&quot;)</b>
+<b class="fc">&nbsp;					.append(outsideShots &gt; 1 ? &quot;es&quot; : &quot;&quot;);</b>
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+&nbsp;	private Map&lt;String, Object&gt; buildEnemyFireResponse(
+&nbsp;			FireSummary summary,
+&nbsp;			int outsideShots) {
+&nbsp;
+<b class="fc">&nbsp;		Map&lt;String, Object&gt; response = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;		response.put(&quot;validShots&quot;, summary.validShots);</b>
+<b class="fc">&nbsp;		response.put(&quot;outsideShots&quot;, outsideShots);</b>
+<b class="fc">&nbsp;		response.put(&quot;repeatedShots&quot;, summary.repeatedShots);</b>
+<b class="fc">&nbsp;		response.put(&quot;missedShots&quot;, summary.missedShots);</b>
+&nbsp;
+<b class="fc">&nbsp;		response.put(&quot;sunkBoats&quot;, buildSunkBoats(summary.sunkBoatsCount));</b>
+&nbsp;
+<b class="fc">&nbsp;		response.put(</b>
+&nbsp;				&quot;hitsOnBoats&quot;,
+<b class="fc">&nbsp;				buildBoatHits(summary.hitsPerBoat, summary.sunkBoatsCount)</b>
+&nbsp;		);
+&nbsp;
+<b class="fc">&nbsp;		return response;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private List&lt;Map&lt;String, Object&gt;&gt; buildSunkBoats(
+&nbsp;			Map&lt;String, Integer&gt; sunkBoatsCount) {
+&nbsp;
+<b class="fc">&nbsp;		List&lt;Map&lt;String, Object&gt;&gt; sunkBoats = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;		for (Map.Entry&lt;String, Integer&gt; entry : sunkBoatsCount.entrySet()) {</b>
+<b class="fc">&nbsp;			Map&lt;String, Object&gt; boat = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;			boat.put(&quot;type&quot;, entry.getKey());</b>
+<b class="fc">&nbsp;			boat.put(&quot;count&quot;, entry.getValue());</b>
+&nbsp;
+<b class="fc">&nbsp;			sunkBoats.add(boat);</b>
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		return sunkBoats;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private List&lt;Map&lt;String, Object&gt;&gt; buildBoatHits(
+&nbsp;			Map&lt;String, Integer&gt; hitsPerBoat,
+&nbsp;			Map&lt;String, Integer&gt; sunkBoatsCount) {
+&nbsp;
+<b class="fc">&nbsp;		List&lt;Map&lt;String, Object&gt;&gt; boatHits = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;		for (Map.Entry&lt;String, Integer&gt; entry : hitsPerBoat.entrySet()) {</b>
+<b class="fc">&nbsp;			if (!sunkBoatsCount.containsKey(entry.getKey())) {</b>
+<b class="fc">&nbsp;				Map&lt;String, Object&gt; boat = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;				boat.put(&quot;type&quot;, entry.getKey());</b>
+<b class="fc">&nbsp;				boat.put(&quot;hits&quot;, entry.getValue());</b>
+&nbsp;
+<b class="fc">&nbsp;				boatHits.add(boat);</b>
+&nbsp;			}
+&nbsp;		}
+&nbsp;
+<b class="fc">&nbsp;		return boatHits;</b>
+&nbsp;	}
+&nbsp;
+&nbsp;	private String serializeResponse(Map&lt;String, Object&gt; response) {
+<b class="fc">&nbsp;		ObjectMapper objectMapper = new ObjectMapper();</b>
+<b class="fc">&nbsp;		objectMapper.enable(SerializationFeature.INDENT_OUTPUT);</b>
+&nbsp;
+&nbsp;		try {
+<b class="fc">&nbsp;			return objectMapper.writeValueAsString(response);</b>
+&nbsp;		} catch (JsonProcessingException e) {
+<b class="fc">&nbsp;			throw new RuntimeException(</b>
+&nbsp;					&quot;Erro ao serializar o JSON dos resultados da jogada&quot;, e
+&nbsp;			);
+&nbsp;		}
+&nbsp;	}
+&nbsp;
+<b class="fc">&nbsp;	private static class FireSummary {</b>
+&nbsp;		int validShots;
+&nbsp;		int repeatedShots;
+&nbsp;		int missedShots;
+&nbsp;
+<b class="fc">&nbsp;		final Map&lt;String, Integer&gt; sunkBoatsCount = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;		final Map&lt;String, Integer&gt; hitsPerBoat = new HashMap&lt;&gt;();</b>
+&nbsp;	}
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-11-20 17:10</div>
+</div>
+</body>
+</html>
