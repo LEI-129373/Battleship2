@@ -4,6 +4,7 @@
 package battleship;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The interface Fleet.
@@ -64,4 +65,9 @@ public interface IFleet
 	 * Print status.
 	 */
 	void printStatus();
+
+	default void removeUnavailablePositions(Set<IPosition> usablePositions, Game game) {
+		getSunkShips().forEach(ship -> usablePositions.removeAll(ship.getAdjacentPositions()));
+		game.getAlienMoves().forEach(move ->  usablePositions.removeAll(move.getShots()));
+	}
 }
