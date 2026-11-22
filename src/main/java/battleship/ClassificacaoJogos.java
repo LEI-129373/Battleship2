@@ -7,7 +7,7 @@ import java.util.List;
 
 /** Classificacao em memoria; pode receber dados carregados da base de dados. */
 public final class ClassificacaoJogos {
-    public record Resultado(String jogador, int vitorias, int derrotas) {}
+    public record Resultado(String jogador, int vitorias) {}
     private final List<String> vencedores = new ArrayList<>();
     public void registarVitoria(String vencedor) {
         if (vencedor == null || vencedor.isBlank()) throw new IllegalArgumentException("Vencedor obrigatorio");
@@ -17,7 +17,7 @@ public final class ClassificacaoJogos {
         List<Resultado> tabela = new ArrayList<>();
         for (String nome : vencedores.stream().distinct().toList()) {
             int total = CollectionUtils.cardinality(nome, vencedores);
-            tabela.add(new Resultado(nome, total, 0));
+            tabela.add(new Resultado(nome, total));
         }
         tabela.sort(Comparator.comparingInt(Resultado::vitorias).reversed().thenComparing(Resultado::jogador));
         return List.copyOf(tabela);

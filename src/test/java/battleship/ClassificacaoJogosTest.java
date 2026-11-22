@@ -67,7 +67,7 @@ class ClassificacaoJogosTest {
 
             List<ClassificacaoJogos.Resultado> tabela = classificacao.classificacao();
             assertEquals(1, tabela.size());
-            assertEquals(new ClassificacaoJogos.Resultado("Ana", 1, 0), tabela.get(0));
+            assertEquals(new ClassificacaoJogos.Resultado("Ana", 1), tabela.get(0));
         }
     }
 
@@ -92,7 +92,7 @@ class ClassificacaoJogosTest {
             classificacao.registarVitoria("Rui");
             classificacao.registarVitoria("Rui");
 
-            assertEquals(List.of(new ClassificacaoJogos.Resultado("Rui", 3, 0)),
+            assertEquals(List.of(new ClassificacaoJogos.Resultado("Rui", 3)),
                     classificacao.classificacao());
         }
 
@@ -108,20 +108,10 @@ class ClassificacaoJogosTest {
             classificacao.registarVitoria("Rui");
 
             List<ClassificacaoJogos.Resultado> esperado = List.of(
-                    new ClassificacaoJogos.Resultado("Rui", 3, 0),
-                    new ClassificacaoJogos.Resultado("Ana", 2, 0),
-                    new ClassificacaoJogos.Resultado("Bruno", 2, 0));
+                    new ClassificacaoJogos.Resultado("Rui", 3),
+                    new ClassificacaoJogos.Resultado("Ana", 2),
+                    new ClassificacaoJogos.Resultado("Bruno", 2));
             assertEquals(esperado, classificacao.classificacao());
-        }
-
-        @Test
-        @DisplayName("As derrotas são sempre 0")
-        void lossesAreAlwaysZero() {
-            classificacao.registarVitoria("Ana");
-            classificacao.registarVitoria("Rui");
-
-            for (ClassificacaoJogos.Resultado r : classificacao.classificacao())
-                assertEquals(0, r.derrotas());
         }
 
         @Test
@@ -131,19 +121,18 @@ class ClassificacaoJogosTest {
             List<ClassificacaoJogos.Resultado> tabela = classificacao.classificacao();
 
             assertThrows(UnsupportedOperationException.class,
-                    () -> tabela.add(new ClassificacaoJogos.Resultado("Rui", 1, 0)));
+                    () -> tabela.add(new ClassificacaoJogos.Resultado("Rui", 1)));
         }
 
         @Test
         @DisplayName("Os acessores do record Resultado devolvem os valores do construtor")
         void resultadoAccessors() {
-            ClassificacaoJogos.Resultado r = new ClassificacaoJogos.Resultado("Ana", 5, 2);
+            ClassificacaoJogos.Resultado r = new ClassificacaoJogos.Resultado("Ana", 5);
 
             assertEquals("Ana", r.jogador());
             assertEquals(5, r.vitorias());
-            assertEquals(2, r.derrotas());
-            assertEquals(new ClassificacaoJogos.Resultado("Ana", 5, 2), r);
-            assertEquals(r.hashCode(), new ClassificacaoJogos.Resultado("Ana", 5, 2).hashCode());
+            assertEquals(new ClassificacaoJogos.Resultado("Ana", 5), r);
+            assertEquals(r.hashCode(), new ClassificacaoJogos.Resultado("Ana", 5).hashCode());
             assertTrue(r.toString().contains("Ana"));
         }
     }
