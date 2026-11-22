@@ -7,12 +7,13 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | Local | Cheiro no código | Refabricação | Nº de aluno |
 |---|---|---|---|
 | `Game::randomEnemyFire` | Long Method | Extract Method | 123282 |
-| `Game::randomEnemyFire` | Feature Envy | Move Method | 123282 |
-| `Game` | Large Class | Extract Class | 123282 |
+| `Game::randomEnemyFire` | Feature Envy | Move + Extract Method | 123282 |
+| `Game` | Large Class | Move Static Members + Extract Delegate | 123282 |
 | `BoardPrinter::printBoard` | Long Parameter List | Introduce Parameter Object | 123282 |
-| `Game::jsonShots` | Duplicated Code | Extract Method / Move Method | 123282 |
-| `Game::fireShots` | Comments | Extract Method + Rename Method | 123282 |
-| `Game::readEnemyFire` | Primitive Obsession | Replace Data Value with Object | 123282 |
+| `IGame::ShotResult` | Data Clumps | Replace Constructor with Factory Method | 123282 |
+| `Game` | Comments | Extract Method + Rename Method | 123282 |
+| `Game::readEnemyFire` | Primitive Obsession | Replace Remove Dead Code + Remove Comments + Update Javadoc | 123282 |
+| `ShotParser::addShotFromToken` | Primitive Obsession | Replace Primitive with Object -> Extract Method + Extract Constant | 123282 |
 | `Tasks::menu` (caso `GUARDAR`) | Long Method | Extract Method | 98455 |
 | `HistoricoPdf::acrescentar` | Feature Envy | Extract Method + Move Method | 98455 |
 | `Tasks` (leitura da frota extraída para `LeitorFrota`) | Large Class | Extract Class | 98455 |
