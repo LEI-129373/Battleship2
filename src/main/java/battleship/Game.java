@@ -249,17 +249,17 @@ public class Game implements IGame
 
 		if (!pos.isInside()) {
             shotStatistics.countInvalidShots++;
-			return new ShotResult(false, false, null, false);
+			return ShotResult.invalidShot();
 		}
 
 		if (isRepeated || repeatedShot(pos)) {
             shotStatistics.countRepeatedShots++;
-			return new ShotResult(true, true, null, false);
+			return ShotResult.repeatedShot();
 		}
 
 		IShip ship = myFleet.shipAt(pos);
 		if (ship == null)
-			return new ShotResult(true, false, null, false);
+			return ShotResult.miss();
 		else
 		{
 			ship.shoot(pos);
@@ -267,7 +267,7 @@ public class Game implements IGame
 			if (!ship.stillFloating()) {
                 shotStatistics.countSinks++;
 			}
-			return new ShotResult(true, false, ship, !ship.stillFloating());
+			return ShotResult.hit(ship);
 		}
 	}
 

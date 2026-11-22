@@ -33,7 +33,24 @@ public interface IGame
 	 */
 	void fireShots(List<IPosition> shots);
 
-	record ShotResult(boolean valid, boolean repeated, IShip ship, boolean sunk) {}
+	record ShotResult(boolean valid, boolean repeated, IShip ship, boolean sunk) {
+
+		public static ShotResult invalidShot() {
+			return new ShotResult(false, false, null, false);
+		}
+
+		public static ShotResult repeatedShot() {
+			return new ShotResult(true, true, null, false);
+		}
+
+		public static ShotResult miss() {
+			return new ShotResult(true, false, null, false);
+		}
+
+		public static ShotResult hit(IShip ship) {
+			return new ShotResult(true, false, ship, !ship.stillFloating());
+		}
+	}
 
 	/**
 	 * Fires a single shot at the specified position and indicates whether the shot is valid, repeated,
