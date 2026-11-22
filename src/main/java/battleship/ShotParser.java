@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ShotParser {
+
+    public static final String COLUMN_ONLY_REGEX = "[A-Za-z]";
+
     static @NotNull List<IPosition> readShots(String input) {
         List<IPosition> shots = new ArrayList<>();
 
@@ -21,11 +24,11 @@ public class ShotParser {
     }
 
     private static void addShotFromToken(String token, Scanner inputScanner, List<IPosition> shots) {
-        if (token.matches("[A-Za-z]")) {
+        if (isColumnOnly(token)) {
             // Caso seja somente uma coluna ("A", "B", etc.), esperar o próximo número
             if (inputScanner.hasNextInt()) {
                 int row = inputScanner.nextInt();
-                shots.add(new Position(token.toUpperCase().charAt(0), row));
+                shots.add(new ClassicCoordinate(token.charAt(0), row).toPosition());
             } else {
                 throw new IllegalArgumentException("Posição incompleta! A coluna '" + token + "' não é seguida por uma linha.");
             }
@@ -34,6 +37,10 @@ public class ShotParser {
             Scanner singleScanner = new Scanner(token);
             shots.add(Tasks.readClassicPosition(singleScanner));
         }
+    }
+
+    private static boolean isColumnOnly(String token) {
+        return token.matches(COLUMN_ONLY_REGEX);
     }
 
     static void validateShotCount(List<IPosition> shots) {
