@@ -14,12 +14,12 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `Game::fireShots` | Comments | Extract Method + Rename Method | 123282 |
 | `Game::readEnemyFire` | Primitive Obsession | Replace Data Value with Object | 123282 |
 | `Tasks::menu` | Long Method | Extract Method | 98455 |
-| `HistoricoPdf::acrescentar` | Feature Envy | Move Method | 98455 |
+| `HistoricoPdf::acrescentar` | Feature Envy | Extract Method + Move Method | 98455 |
 | `Tasks` | Large Class | Extract Class | 98455 |
 | `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
-| `Tasks::menu` | Switch Statements | Replace Conditional with Polymorphism | 98455 |
+| `Tasks::menu` (caso `GRAFICO`) e `Tasks::guardarPartida` | Duplicated Code | Replace Magic Number with Symbolic Constant | 98455 |
 | `Tasks::menu` (casos `RAJADA` e `SIMULA`) | Duplicated Code | Extract Method | 98455 |
-| `Tasks` (`menu`, `menuHelp`, constantes) | Shotgun Surgery | Move Method / Inline Class | 98455 |
+| `ClassificacaoJogos.Resultado` (componente `derrotas`) | Speculative Generality | Remove Parameter | 98455 |
 | `Move::calculateFireSummary` | Long Method | Extract Method | 129373 |
 | `TabuleiroGrafico::construir` | Feature Envy | Move Method | 129373 |
 | `Ship` | Large Class | Extract Class / Extract Subclass | 129373 |
@@ -32,5 +32,5 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | Membro | Ficheiros exclusivos |
 |---|---|
 | 123282 | `Game.java`, `BoardPrinter.java` |
-| 98455 | `Tasks.java`, `HistoricoSqlite.java`, `HistoricoPdf.java` |
-| 129373 | `Move.java`, `Ship.java`, `TabuleiroGrafico.java`, `Position.java`, `Main.java` |
+| 98455 | `Tasks.java`, `HistoricoSqlite.java`, `HistoricoPdf.java`, `ClassificacaoJogos.java` |
+| 129373 | `Move.java`, `Ship.java`, `TabuleiroGrafico.java`, `Position.java` |
