@@ -17,13 +17,13 @@ public final class HistoricoSqlite {
             s.executeUpdate("CREATE TABLE IF NOT EXISTS disparos (id INTEGER PRIMARY KEY AUTOINCREMENT, partida_id INTEGER NOT NULL, lado TEXT NOT NULL, jogada INTEGER NOT NULL, linha INTEGER NOT NULL, coluna INTEGER NOT NULL, resultado TEXT NOT NULL, FOREIGN KEY(partida_id) REFERENCES partidas(id))");
         }
     }
-    public long guardar(IGame jogo, String jogador, String adversario, String vencedor) throws SQLException {
+    public long guardar(IGame jogo, Participantes participantes) throws SQLException {
         try (Connection c = DriverManager.getConnection(url)) {
             c.setAutoCommit(false);
             try {
                 long id;
                 try (PreparedStatement ps = c.prepareStatement("INSERT INTO partidas(jogador,adversario,vencedor,data) VALUES(?,?,?,?)", Statement.RETURN_GENERATED_KEYS)) {
-                    ps.setString(1, jogador); ps.setString(2, adversario); ps.setString(3, vencedor);
+                    ps.setString(1, participantes.jogador()); ps.setString(2, participantes.adversario()); ps.setString(3, participantes.vencedor());
                     ps.setString(4, LocalDateTime.now().toString()); ps.executeUpdate();
                     try (ResultSet keys = ps.getGeneratedKeys()) { if (!keys.next()) throw new SQLException("Sem identificador"); id = keys.getLong(1); }
                 }
@@ -64,5 +64,8 @@ public final class HistoricoSqlite {
             }
         }
         return resultado;
+    }
+
+    static record Participantes(String jogador, String adversario, String vencedor) {
     }
 }

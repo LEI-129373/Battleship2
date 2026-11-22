@@ -39,10 +39,7 @@ class HistoricoSqliteTest {
         // Guardar a partida
         long id = historico.guardar(
                 jogo,
-                "Jogador1",
-                "Computador",
-                "Jogador1"
-        );
+                new HistoricoSqlite.Participantes("Jogador1", "Computador", "Jogador1"));
 
         // Verificar que foi atribuído um ID válido
         assertTrue(id > 0);
@@ -104,8 +101,8 @@ class HistoricoSqliteTest {
         jogo.getMyMoves().add(jogada);
 
         long id = historico.guardar(
-                jogo, "Jogador1", "Computador", "Jogador1"
-        );
+                jogo,
+                new HistoricoSqlite.Participantes("Jogador1", "Computador", "Jogador1"));
 
         List<String> disparos = historico.disparos(id);
 
@@ -138,8 +135,8 @@ class HistoricoSqliteTest {
 
         assertThrows(SQLException.class, () ->
                 historico.guardar(
-                        jogo, "Jogador1", "Computador", "Jogador1"
-                )
+                        jogo,
+                        new HistoricoSqlite.Participantes("Jogador1", "Computador", "Jogador1"))
         );
 
         assertTrue(historico.listar().isEmpty());
@@ -193,10 +190,7 @@ class HistoricoSqliteTest {
         // Tentar guardar partida
         long id = historico.guardar(
                 jogo,
-                "Jogador1",
-                "Computador",
-                "Jogador1"
-        );
+                new HistoricoSqlite.Participantes("Jogador1", "Computador", "Jogador1"));
 
         // Mostrar o identificador devolvido
         System.out.println("ID devolvido: " + id);

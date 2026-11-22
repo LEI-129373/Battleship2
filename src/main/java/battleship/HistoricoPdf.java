@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
@@ -56,10 +57,11 @@ public final class HistoricoPdf {
                 String resultado = "sem resultado";
                 if (i < resultados.size()) {
                     IGame.ShotResult r = resultados.get(i);
-                    resultado = !r.valid() ? "invalido" : r.repeated() ? "repetido" : r.sunk() ? "afundou" : r.ship() != null ? "acerto" : "agua";
+                    resultado = IGame.ShotResult.descreverResultado(r);
                 }
                 texto.add("Jogada " + jogada.getNumber() + ": " + p.getClassicRow() + p.getClassicColumn() + " - " + resultado);
             }
         }
     }
+
 }

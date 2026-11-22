@@ -3,6 +3,8 @@
  */
 package battleship;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -33,7 +35,11 @@ public interface IGame
 	 */
 	void fireShots(List<IPosition> shots);
 
-	record ShotResult(boolean valid, boolean repeated, IShip ship, boolean sunk) {}
+	record ShotResult(boolean valid, boolean repeated, IShip ship, boolean sunk) {
+		public static @NotNull String descreverResultado(ShotResult r) {
+			return !r.valid() ? "invalido" : r.repeated() ? "repetido" : r.sunk() ? "afundou" : r.ship() != null ? "acerto" : "agua";
+		}
+	}
 
 	/**
 	 * Fires a single shot at the specified position and indicates whether the shot is valid, repeated,
