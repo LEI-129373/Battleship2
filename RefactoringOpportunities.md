@@ -19,7 +19,7 @@ Cada membro trabalha num conjunto exclusivo de ficheiros, para evitar conflitos 
 | `HistoricoSqlite::guardar` | Long Parameter List | Introduce Parameter Object | 98455 |
 | `Tasks::menu` (caso `GRAFICO`) e `Tasks::guardarPartida` | Duplicated Code | Replace Magic Number with Symbolic Constant | 98455 |
 | `Tasks::menu` (casos `RAJADA` e `SIMULA`) | Duplicated Code | Extract Method | 98455 |
-| `Tasks` (`menu`, `menuHelp`, constantes) | Shotgun Surgery | Move Method / Inline Class | 98455 |
+| `HistoricoSqlite::guardarDisparos` | Long Method | Introduce Explaining Variable | 98455 |
 | `Move::calculateFireSummary` | Long Method | Extract Method | 129373 |
 | `TabuleiroGrafico::construir` | Feature Envy | Move Method | 129373 |
 | `Ship` | Large Class | Extract Class / Extract Subclass | 129373 |
