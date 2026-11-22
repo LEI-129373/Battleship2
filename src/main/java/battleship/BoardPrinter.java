@@ -30,6 +30,19 @@ public final class BoardPrinter
      * @param showLegend  if true, displays an explanatory legend of the symbols used.
      */
     public static void printBoard(IFleet fleet, List<IMove> moves, boolean show_shots, boolean showLegend) {
+        printBoard(fleet, moves, new BoardOptions(showLegend, show_shots));
+    }
+
+    /**
+     * Prints the game board by representing the positions of ships, adjacent tiles,
+     * shots, and other game elements onto the console. The method also optionally
+     * displays shot positions and a legend explaining the symbols used on the board.
+     *
+     * @param fleet        the fleet of ships to be displayed on the board.
+     * @param moves        the list of moves containing shots.
+     * @param boardOptions
+     */
+    public static void printBoard(IFleet fleet, List<IMove> moves, BoardOptions boardOptions) {
 
         assert fleet != null;
         assert moves != null;
@@ -42,12 +55,12 @@ public final class BoardPrinter
 
         printShips(fleet, map);
 
-        if (show_shots)
+        if (boardOptions.show_shots())
             printBoardShots(moves, map);
 
         printBoardFrame(map);
 
-        if (showLegend) {
+        if (boardOptions.showLegend()) {
             System.out.println("          LEGENDA");
             System.out.println("'" + SHIP_MARKER + "'->navio, '" + SHIP_ADJACENT_MARKER + "'->adjacente a navio, '" + EMPTY_MARKER + "'->água");
             System.out.println("'" + SHOT_SHIP_MARKER + "'->Tiro certeiro, '" + SHOT_WATER_MARKER + "'->Tiro na água");
